@@ -3,20 +3,12 @@ html {
     height: 100%;
 }
 body {
-    background: #2f2f2f;
+    background: url("{% THEME %}/img/bit_texture.png");
     margin:0 auto; 
     padding:0px; 
     font: 13px/18px 'Lucida Grande', Tahoma, Verdana, Sans-Serif;
     min-width:1100px;
     height:100%;
-}
-@font-face {
-    font-family: nevisBold;
-    src: url("../fonts/nevis.eot"); /* EOT file for IE */
-}
-@font-face {
-    font-family: nevisBold;
-    src: url("../fonts/nevis.ttf");
 }
 h1, h2, h3 {
     font-family:nevisBold;
@@ -84,14 +76,14 @@ nav {
         width:17px;
     }
     nav #logo {
-        background: url("../../templates/site/Funch/img/logo.png") no-repeat;
+        background: url("{% THEME %}/img/logo.png") no-repeat;
         background-size:100px 70px;
         height:68px;
         width:119px;
     }
     nav #menu {
         background:#fff;
-        padding:10px 10px 20px 10px;
+        padding:5px 10px 10px 10px;
     }
     nav a {
         display: block;
@@ -100,11 +92,18 @@ nav {
         font-family: Arial, Tahoma, sans-serif;
         font-weight:lighter;
     }
-    nav a:link {color:#0c0c0c;}
-    nav a:visited {color:#0c0c0c;}
+    nav a:link {color:#a0a0a0;}
+    nav a:visited {color:#a0a0a0;}
     nav a:hover {color:#000; text-decoration: none; font-weight:bold;}
     nav a:active {color:#000; font-weight:bold;}
     nav a.active-link {color:#000; font-weight:bold;}
+    .anchor {
+        color:#a0a0a0;
+        cursor:pointer;
+    }
+    .anchor:hover {color:#000; text-decoration: none; font-weight:bold;}
+    .anchor:active {color:#000; font-weight:bold;}
+    
     nav ul { 
         white-space:nowrap;
         list-style-type:none;
@@ -120,9 +119,7 @@ nav {
             border-right:0px;
         }
     nav #menu #portofolio {
-        border-top:1px inset #ddd;
-        margin:0 -10px 0 -10px;
-        padding:15px 10px 5px 10px;
+        padding:10px 10px 5px 10px;
         text-decoration: none;
         font-size: 12px;
         font-family: Arial, Tahoma, sans-serif;
@@ -133,6 +130,13 @@ nav {
     }
 
 /* content */
+.ajax-loading {
+    width: 500px;
+    height:200px;
+    text-align: center;
+    display: table-cell;
+    vertical-align: middle;
+}
 #content{
     display:none;
     position:absolute;
@@ -211,15 +215,18 @@ span.inactive {
 }
 
 /* Slideshow */
+.slideshow-loading {
+    width: 100%;
+    text-align: center;
+    margin-top: 370px;
+}
 #slideshow{
-    position:absolute;
-    top:0px;
-    left:0px;
+    position:relative;
     z-index:8;
     margin:0;
     width:100%;
     height:100%;
-    min-height:300px;
+    min-height:750px;
 }
 
 #slideshow ul{
@@ -259,7 +266,7 @@ span.inactive {
     height:86px;
     width:60px;
     position:absolute;
-    background: url('../../templates/site/Funch/img/arrows.png') no-repeat;
+    background: url('{% THEME %}/img/arrows.png') no-repeat;
     top:50%;
     margin:-43px -10px 0 -10px;
     cursor:pointer;

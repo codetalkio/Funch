@@ -12,62 +12,73 @@
     <script src="{% JS_ROOT %}head.load.min.js" type="text/javascript" charset="utf-8"></script>
     <script>
     !window.jQuery && document.write('<script src="{% JS_ROOT %}jquery-1.7.1.min.js"><\/script>');
-    
+    //{% AJAX %}
     $(document).ready(function () {
-        head.js('{% THEME_ROOT %}slideshow.js');
-        var w=window,d=document,e=d.documentElement,g=d.getElementsByTagName('body')[0],x=w.innerWidth||e.clientWidth||g.clientWidth,y=w.innerHeight||e.clientHeight||g.clientHeight;
-        $("#slideshow").css({"width":x, "height":y});
-        $(".slides img").css({"width":x, "height":y});
-        $(window).resize(function() {
-            var w=window,d=document,e=d.documentElement,g=d.getElementsByTagName('body')[0],x=w.innerWidth||e.clientWidth||g.clientWidth,y=w.innerHeight||e.clientHeight||g.clientHeight;
-            console.log(x + ' : ' + y );
-            $("#slideshow").css({"width":x, "height":y});
-            $(".slides img").css({"width":x, "height":y});
-        });
-        $('#content').fadeIn(200);
         var upM = false;
-        function slideDownMenu(){
-            $('#menu').slideDown(200);
-            upM = false;
-        }
-        function slideUpMenu(){
-            $('#menu').slideUp(200);
-            upM = true;
-        }
-        $('#menuToggle').click(function () {  
-            if(upM){
-                slideDownMenu();
+        function toggle_menu() {
+            if(upM) {
+                $('#menu').slideDown(200);
+                upM = false;
+            } else {
+                $('#menu').slideUp(200);
+                upM = true;
             }
-            else{
-                slideUpMenu();
+        }
+        var upC = false;
+        function toggle_content() {
+            if(upC) {
+                $('#content').fadeIn();
+                upC = false;
+            } else {
+                $('#content').fadeOut();
+                upC = true;
             }
+        }
+        
+        $('#content').fadeIn(200);
+        $('#menuToggle').click(function () {
+            toggle_menu();
+        });
+        $('#contentToggle').click(function () {
+            toggle_content();
         });
 
-
-        var upC = false;
-        function showContent(){
+        $('.ajax-menu').on('click', 'a', function () {
             $('#content').fadeIn();
             upC = false;
-        }
-        function hideContent(){
-            $('#content').fadeOut();
-            upC = true;
-        }
-        $('#contentToggle').click(function () {  
-            if(upC){
-                showContent();
-            }
-            else{
-                hideContent();
-            }
         });
+        $('#portofolio').on('click', 'a', function () {
+            var projectId = $(this).attr('href');
+            var loadingImg = '<div class="slideshow-loading"><img src="<?php print RESOURCES_ROOT; ?>img/load.gif" alt="Loading..."></div>';
+            var imgStyle = 'style="width:100%;"';
+            
+            $("#slideshow ul").html(loadingImg);
+            
+            $.ajax({
+                url: '<?php print URL_ROOT; ?>interact.php',
+                type: 'POST',
+                data: {action: 'portfolio_getImages', portfolio_id: projectId},
+                dataType: 'json',
+                success: function(json) {
+                    console.log(json);
+                    var imageList = "";
+                    var pathPrefix = "<?php print RESOURCES_ROOT . 'uploads' . DS; ?>";
+                    $.each(json, function(i, item) {
+                        imageList += '<li>';
+                        imageList += '<img ' + imgStyle + ' src="' + pathPrefix + item.img_file + '">';
+                        imageList += '</li>';
+                    });
+                    $("#slideshow ul").html(imageList);
+                }
+            });
+            return false;
+        }); 
     });
     </script>
 </head>
 
 <body>
     <div id="container">
-    <!--<img id="backgroundImage" src="{% UPLOAD_ROOT %}p16h1igrjbmip1anp1oe8fnb1qe54.jpg">-->
         <nav>
             <table>
                 <tr>
@@ -85,51 +96,35 @@
                 </tr>
             </table>
             <div id="menu">
-                {% MENU %}
+                <ul id="menu" class="ajax-menu">
+                <?php
+                    foreach (Pages::getMenu() as $menu) {
+                        print '<li><a ' . $menu['active'] . ' href="' . $menu['href'] . '">' . $menu['name'] . '</a></li>';
+                    }
+                ?>
+                </ul>
 
-                <div id="portofolio">
-                    <ul>
-                        <li>
-                            Åben Portofolio<br>
-                            <div style="padding-left:5px;font-size:11px;">
-                            1 2 3 4 5 6 7 8<br>
-                            9 10 <span style="font-weight:bold;color:#2F2F5F;text-decoration:underline;">11</span> 12 13 14<br>
-                            15 16<br>
-                            </div>
-                        </li>
-                        <li>
-                            Galleri
-                        </li>
-                        <li>
-                            Endnu et Galleri
-                        </li>
-                    </ul>
-                </div>
+                <ul id="portofolio">
+                    <?php
+                    $portfolio = new Portfolio;
+                    foreach ($portfolio->get() as $gallery) {
+                        print '<li><a href="' . $gallery['id'] . '">' . $gallery['name'] . '</a></li>';
+                    }
+                    ?>
+                </ul>
             </div>
         </nav>
 
         <div id="content">
                 <img src="{% IMG_ROOT %}icons/close.png" id="contentToggle">
-            {% CONTENT %}
+                <div class="ajax-content">
+                    {% CONTENT %}
+                </div>
         </div>
 
         <div id="slideshow">
-
-            <ul class="slides">
-                <li>
-                    <img src="{% UPLOAD_ROOT %}p16h1igrjbmip1anp1oe8fnb1qe54.jpg" style="width:100%;height:100%;">
-                </li>
-                <li>
-                    <img src="{% UPLOAD_ROOT %}p16h1j6spe1l571fss1pnkrio1nk64.jpeg" style="width:100%;height:100%;">
-                </li>
-                <li>
-                    <img src="{% UPLOAD_ROOT %}p16h1j7e2b6vknduvsp8mn14.png" style="width:100%;height:100%;">
-                </li>
-                <li>
-                    <img src="{% UPLOAD_ROOT %}p16h1j7e2b15p3ipr11k1mn1an35.jpeg" style="width:100%;height:100%;">
-                </li>
+            <ul>
             </ul>
-
             <span class="arrow previous"></span>
             <span class="arrow next"></span>
         </div>
