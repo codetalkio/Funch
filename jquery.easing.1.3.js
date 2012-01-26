@@ -1,3 +1,13 @@
+<?php 
+ob_start ("ob_gzhandler");
+header("Content-type: text/javascript; charset: UTF-8");
+header("Cache-Control: must-revalidate");
+$offset = 60 * 60 * 60 ;
+$ExpStr = "Expires: " . 
+gmdate("D, d M Y H:i:s",
+time() + $offset) . " GMT";
+header($ExpStr);
+?>
 /*
  * jQuery Easing v1.3 - http://gsgd.co.uk/sandbox/jquery/easing/
  *

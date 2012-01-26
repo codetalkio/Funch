@@ -103,12 +103,7 @@ nav {
     nav a:hover {color:#000; text-decoration: none; font-weight:bold;}
     nav a:active {color:#000; font-weight:bold;}
     nav a.active-link {color:#000; font-weight:bold;}
-    .anchor {
-        color:#a0a0a0;
-        cursor:pointer;
-    }
-    .anchor:hover {color:#000; text-decoration: none; font-weight:bold;}
-    .anchor:active {color:#000; font-weight:bold;}
+    nav a.active-gallery {color:#000; font-weight:bold;}
     
     nav ul { 
         white-space:nowrap;

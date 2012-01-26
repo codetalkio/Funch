@@ -77,7 +77,7 @@
                             $(a).parent().fadeTo(100, 0);
                         },
                         afterEnd: function(a) {
-                            $(a).parent().fadeTo(100, 1);
+                            $(a).parent().fadeTo(250, 1);
                         }
                     });
                 }
@@ -97,11 +97,17 @@
             upC = false;
         });
         $('#portofolio').on('click', 'a', function () {
+            $('#portofolio a').removeClass('active-gallery');
+            $(this).attr('class', 'active-gallery');
             load_gallery(this);
             return false;
         });
         if (galleryNotSet) {
-            load_gallery($('#portofolio a').get(0));
+            var firstGallery = $('#portofolio a').get(0);
+            console.log(firstGallery);
+            $('#portofolio a').removeClass('active-gallery');
+            $(firstGallery).attr('class', 'active-gallery');
+            load_gallery(firstGallery);
         };
     });
     </script>
