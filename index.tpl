@@ -17,6 +17,10 @@
     !window.jQuery && document.write('<script src="{% JS_ROOT %}jquery-1.7.1.min.js"><\/script>');
     //{% AJAX %}
     $(document).ready(function () {
+        var w=window,d=document,e=d.documentElement,g=d.getElementsByTagName('body')[0],x=w.innerWidth||e.clientWidth||g.clientWidth,y=w.innerHeight||e.clientHeight||g.clientHeight;
+        var y = y * imageRatio;
+        var originalX = x;
+        var imageRatio = 800 / 1280;
         var upM = false;
         var upC = false;
         var menu = $('#menu');
@@ -24,7 +28,10 @@
         var content = $('#content');
         var galleryContent = $("#galleri-carousel");
         var galleryContainer = $(".galleri-carousel");
+        var galleryUl = $(".galleri-carousel ul");
+        var galleryLi = $(".galleri-carousel ul li");
         var galleryNotSet = true;
+        var originalUlLeft = 1280;
         var loadingImg = '<div class="slideshow-loading"><img src="<?php print RESOURCES_ROOT; ?>img/load.gif" alt="Loading..."></div>';
         
         function toggle_menu() {
@@ -58,13 +65,31 @@
                 data: {action: 'portfolio_getImages', portfolio_id: projectId},
                 dataType: 'json',
                 success: function(json) {
+                    var goArray = new Array();
+                    var goList = "";
                     var imageList = "";
                     var pathPrefix = "<?php print RESOURCES_ROOT . 'uploads' . DS; ?>";
+                    w=window,d=document,e=d.documentElement,g=d.getElementsByTagName('body')[0],x=w.innerWidth||e.clientWidth||g.clientWidth,y=w.innerHeight||e.clientHeight||g.clientHeight;
+                    y = x * imageRatio;
                     $.each(json, function(i, item) {
-                        imageList += '<li>';
-                        imageList += '<img width="1280px" height="800px" src="' + pathPrefix + item.img_file + '" alt="' + item.name + '">';
+                        var goId = 'gallery-image-' + item.id;
+                        goArray[i] = goId;
+                        j = i + 1;
+                        if (i == 0) {
+                            goList += '<li><a href="" id="' + goId + '" class="active-gallery-image">' + j + '.</a></li>';
+                        } else {
+                            goList += '<li><a href="" id="' + goId + '">' + j + '.</a></li>';
+                        }
+                        
+                        imageList += '<li image="' + goId + '">';
+                        imageList += '<img class="gallery-image" width="' 
+                                  + x + 'px" height="' + y + 'px" src="' 
+                                  + pathPrefix + item.img_file 
+                                  + '" alt="' + item.name + '">';
                         imageList += '</li>';
                     });
+                    $(".image-list-ul").remove();
+                    $(elem).parent().append('<ul class="image-list-ul">' + goList + '</ul>');
                     // Load gallery content
                     galleryContainer.html('<ul>' + imageList + '</ul>');
                     // Activate jCarousel for the gallery
@@ -72,43 +97,60 @@
                         visible: 1,
                         btnNext: "#nextBtn",
                         btnPrev: "#prevBtn",
-                        easing: "elasin",
+                        btnGo: goArray,
                         beforeStart: function(a) {
                             $(a).parent().fadeTo(100, 0);
                         },
                         afterEnd: function(a) {
                             $(a).parent().fadeTo(250, 1);
+                            var targetImgLink = $(a).attr('image');
+                            $("[id^=gallery-image-]").removeClass('active-gallery-image');
+                            $('#' + targetImgLink).attr('class', 'active-gallery-image');
                         }
                     });
+                    originalUlLeft = $(".galleri-carousel ul").css("left");
                 }
             });
         }
         
-        content.fadeIn(200);
+        $(window).resize(function() {
+            w=window,d=document,e=d.documentElement,g=d.getElementsByTagName('body')[0],x=w.innerWidth||e.clientWidth||g.clientWidth,y=w.innerHeight||e.clientHeight||g.clientHeight;
+            y = x * imageRatio;
+            // This is to adjust the jCarousel dom element
+            ulWidth = $(".galleri-carousel ul li").length * x;
+            var newLeft = x / originalX * parseFloat(originalUlLeft);
+            $(".galleri-carousel ul").css({"width":ulWidth, "left":newLeft});
+            galleryContainer.css({"width":x, "height":y});
+            $(".galleri-carousel ul li").css({"width":x, "height":y});
+            $(".gallery-image").css({"width":x, "height":y});
+            $(".gallery-image").attr({"width":x, "height":y});
+        });
         $('#menuToggle').click(function () {
             toggle_menu();
         });
         $('#contentToggle').click(function () {
             toggle_content();
         });
-
         $('.ajax-menu').on('click', 'a', function () {
             content.fadeIn();
             upC = false;
         });
-        $('#portofolio').on('click', 'a', function () {
+        $('#portofolio > li').on('click', 'a', function () {
             $('#portofolio a').removeClass('active-gallery');
             $(this).attr('class', 'active-gallery');
+            galleryContainer.fadeOut(0);
             load_gallery(this);
+            galleryContainer.fadeIn(200);
             return false;
         });
+        
         if (galleryNotSet) {
             var firstGallery = $('#portofolio a').get(0);
-            console.log(firstGallery);
             $('#portofolio a').removeClass('active-gallery');
             $(firstGallery).attr('class', 'active-gallery');
             load_gallery(firstGallery);
         };
+        content.fadeIn(200);
     });
     </script>
 </head>
@@ -145,7 +187,7 @@
                     <?php
                     $portfolio = new Portfolio;
                     foreach ($portfolio->get() as $gallery) {
-                        print '<li><a href="' . $gallery['id'] . '">' . $gallery['name'] . '</a></li>';
+                        print '<li><a class="gallery-anchor" href="' . $gallery['id'] . '">' . $gallery['name'] . '</a></li>';
                     }
                     ?>
                 </ul>
