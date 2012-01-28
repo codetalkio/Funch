@@ -58,6 +58,7 @@
             var projectId = $(elem).attr('href');
             
             $("#slideshow #loading-placeholder").html(loadingImg);
+            galleryContainer.fadeOut(0);
             
             $.ajax({
                 url: '<?php print URL_ROOT; ?>interact.php',
@@ -92,6 +93,7 @@
                     $(elem).parent().append('<ul class="image-list-ul">' + goList + '</ul>');
                     // Load gallery content
                     galleryContainer.html('<ul>' + imageList + '</ul>');
+                    galleryContainer.fadeIn(200);
                     // Activate jCarousel for the gallery
                     galleryContainer.jCarouselLite({
                         visible: 1,
@@ -138,9 +140,7 @@
         $('#portofolio > li').on('click', 'a', function () {
             $('#portofolio a').removeClass('active-gallery');
             $(this).attr('class', 'active-gallery');
-            galleryContainer.fadeOut(0);
             load_gallery(this);
-            galleryContainer.fadeIn(200);
             return false;
         });
         
