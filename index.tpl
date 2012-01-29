@@ -74,7 +74,7 @@
                     y = x * imageRatio;
                     $.each(json, function(i, item) {
                         var goId = 'gallery-image-' + item.id;
-                        goArray[i] = goId;
+                        goArray[i] = '#' + goId;
                         j = i + 1;
                         if (i == 0) {
                             goList += '<li><a href="" id="' + goId + '" class="active-gallery-image">' + j + '.</a></li>';
@@ -103,11 +103,19 @@
                         beforeStart: function(a) {
                             $(a).parent().fadeTo(100, 0);
                         },
-                        afterEnd: function(a) {
-                            $(a).parent().fadeTo(250, 1);
+                        afterEnd: function(a) {    
                             var targetImgLink = $(a).attr('image');
                             $("[id^=gallery-image-]").removeClass('active-gallery-image');
                             $('#' + targetImgLink).attr('class', 'active-gallery-image');
+                            w=window,d=document,e=d.documentElement,g=d.getElementsByTagName('body')[0],x=w.innerWidth||e.clientWidth||g.clientWidth,y=w.innerHeight||e.clientHeight||g.clientHeight;
+                            y = x * imageRatio;
+                            // This is to adjust the jCarousel dom element
+                            ulWidth = $(".galleri-carousel ul li").length * x;
+                            var curLeft = $(".active-gallery-image").html().split('.');
+                            var newLeft = x * parseFloat(curLeft[0]) * -1;
+                            $(".galleri-carousel ul").css({"width":ulWidth, "left":newLeft});
+                            
+                            $(a).parent().fadeTo(250, 1);
                         }
                     });
                     originalUlLeft = $(".galleri-carousel ul").css("left");
@@ -120,7 +128,9 @@
             y = x * imageRatio;
             // This is to adjust the jCarousel dom element
             ulWidth = $(".galleri-carousel ul li").length * x;
-            var newLeft = x / originalX * parseFloat(originalUlLeft);
+            var curLeft = $(".active-gallery-image").html().split('.');
+            var newLeft = x * parseFloat(curLeft[0]) * -1;
+            
             $(".galleri-carousel ul").css({"width":ulWidth, "left":newLeft});
             galleryContainer.css({"width":x, "height":y});
             $(".galleri-carousel ul li").css({"width":x, "height":y});

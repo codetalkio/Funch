@@ -87,9 +87,9 @@ nav {
     nav #menu {
         background:#fff;
         padding:5px 10px 10px 10px;
-        -moz-box-shadow: 4px 0 5px -5px #888,-4px 0 5px -5px #888;
-        -webkit-box-shadow: 4px 0 5px -5px #888,-4px 0 5px -5px #888;
-        box-shadow: 4px 0 5px -5px #888,-4px 0 5px -5px #888;
+        -moz-box-shadow: 4px 5px 11px -5px #888,-4px 5px 12px -5px #888;
+        -webkit-box-shadow: 4px 5px 11px -5px #888,-4px 5px 12px -5px #888;
+        box-shadow: 4px 5px 11px -5px #888,-4px 5px 12px -5px #888;
     }
     nav a {
         display: block;
