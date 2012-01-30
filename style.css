@@ -87,9 +87,9 @@ nav {
     nav #menu {
         background:#fff;
         padding:5px 10px 10px 10px;
-        -moz-box-shadow: 4px 5px 11px -5px #888,-4px 5px 12px -5px #888;
         -webkit-box-shadow: 4px 5px 11px -5px #888,-4px 5px 12px -5px #888;
         box-shadow: 4px 5px 11px -5px #888,-4px 5px 12px -5px #888;
+        -moz-box-shadow: 4px 8px 11px -5px #888,-4px 8px 12px -5px #888;
     }
     nav a {
         display: block;
@@ -133,7 +133,7 @@ nav {
             border-right:0px;
         }
     nav #menu #portofolio {
-        padding:10px 10px 5px 10px;
+        padding:10px 10px 15px 10px;
         text-decoration: none;
         font-size: 12px;
         font-family: Arial, Tahoma, sans-serif;
@@ -277,7 +277,7 @@ span.inactive {
     position:absolute;
     background: url('{% THEME %}/img/arrows.png') no-repeat;
     top:50%;
-    margin:-43px -10px 0 -10px;
+    margin:-33px 0 0 0;
     cursor:pointer;
     z-index:5000;
 }
