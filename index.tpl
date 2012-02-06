@@ -11,13 +11,11 @@
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript" charset="utf-8"></script>
     <script src="{% JS_ROOT %}head.load.min.js" type="text/javascript" charset="utf-8"></script>
     <script src="{% THEME_ROOT %}jcarousellite_1.0.1.min.js" type="text/javascript" charset="utf-8"></script>
-    <script src="{% THEME_ROOT %}jquery.easing.1.3.js" type="text/javascript" charset="utf-8"></script>
-    <script src="{% THEME_ROOT %}jquery.easing.compatibility.js" type="text/javascript" charset="utf-8"></script>
     <script>
     !window.jQuery && document.write('<script src="{% JS_ROOT %}jquery-1.7.1.min.js"><\/script>');
     //{% AJAX %}
     $(document).ready(function () {
-        var w=window,d=document,e=d.documentElement,g=d.getElementsByTagName('body')[0],x=w.innerWidth||e.clientWidth||g.clientWidth,y=w.innerHeight||e.clientHeight||g.clientHeight;
+        var w=window, d=document, e=d.documentElement, g=d.getElementsByTagName('body')[0], x=w.innerWidth||e.clientWidth||g.clientWidth, y=w.innerHeight||e.clientHeight||g.clientHeight;
         var y = y * imageRatio;
         var originalX = x;
         var imageRatio = 800 / 1280;
@@ -54,7 +52,7 @@
                 upC = true;
             }
         }
-        function load_gallery(elem) {
+        function load_gallery(elem, pos) {
             var projectId = $(elem).attr('href');
             
             $("#slideshow #loading-placeholder").html(loadingImg);
@@ -70,51 +68,116 @@
                     var goList = "";
                     var imageList = "";
                     var pathPrefix = "<?php print RESOURCES_ROOT . 'uploads' . DS; ?>";
-                    w=window,d=document,e=d.documentElement,g=d.getElementsByTagName('body')[0],x=w.innerWidth||e.clientWidth||g.clientWidth,y=w.innerHeight||e.clientHeight||g.clientHeight;
+                    w=window,d=document, e=d.documentElement, g=d.getElementsByTagName('body')[0], x=w.innerWidth||e.clientWidth||g.clientWidth, y=w.innerHeight||e.clientHeight||g.clientHeight;
                     y = x * imageRatio;
+                    var j = 1;
                     $.each(json, function(i, item) {
                         var goId = 'gallery-image-' + item.id;
-                        goArray[i] = '#' + goId;
-                        j = i + 1;
-                        if (i == 0) {
-                            goList += '<li><a href="" id="' + goId + '" class="active-gallery-image">' + j + '.</a></li>';
-                        } else {
-                            goList += '<li><a href="" id="' + goId + '">' + j + '.</a></li>';
-                        }
+                        j = i;
                         
-                        imageList += '<li image="' + goId + '">';
+                        imageList += '<li imagenum="' + i + '" image="' + goId + '">';
                         imageList += '<img class="gallery-image" width="' 
                                   + x + 'px" height="' + y + 'px" src="' 
                                   + pathPrefix + item.img_file 
                                   + '" alt="' + item.name + '">';
                         imageList += '</li>';
                     });
+                    j = j + 1;
+                    if (pos == 'end') {
+                        var newImageNum = j;
+                    } else {
+                        var newImageNum = 1;
+                    }
+                    console.log(newImageNum);
                     $(".image-list-ul").remove();
-                    $(elem).parent().append('<ul class="image-list-ul">' + goList + '</ul>');
+                    $(elem).parent().append('<span class="image-list-ul">' + newImageNum + ' / ' + j + '</span>');
                     // Load gallery content
                     galleryContainer.html('<ul>' + imageList + '</ul>');
                     galleryContainer.fadeIn(200);
                     // Activate jCarousel for the gallery
                     galleryContainer.jCarouselLite({
+                        start: (newImageNum - 1),
                         visible: 1,
+                        circular: true,
                         btnNext: "#nextBtn",
                         btnPrev: "#prevBtn",
-                        btnGo: goArray,
+                        // btnGo: goArray,
                         beforeStart: function(a) {
+                            prevImg = $(a).attr('imagenum');
                             $(a).parent().fadeTo(100, 0);
                         },
-                        afterEnd: function(a) {    
-                            var targetImgLink = $(a).attr('image');
-                            $("[id^=gallery-image-]").removeClass('active-gallery-image');
-                            $('#' + targetImgLink).attr('class', 'active-gallery-image');
-                            w=window,d=document,e=d.documentElement,g=d.getElementsByTagName('body')[0],x=w.innerWidth||e.clientWidth||g.clientWidth,y=w.innerHeight||e.clientHeight||g.clientHeight;
+                        afterEnd: function(a) {
+                            var goToNext = false;
+                            var goToPrev = false;
+                            var allImages = $(".image-list-ul").html().split('/');
+                            j = parseInt(allImages[1]);
+                            // set the image number
+                            var currentImage = $(".image-list-ul").html().split('/');
+                            nextImg = $(a).attr('imagenum');
+                            if (prevImg - nextImg > 1) {
+                                goToNext = true;
+                            } else if (nextImg - prevImg > 1) {
+                                goToPrev = true;
+                            } else {
+                                if (prevImg > nextImg) {
+                                    newImageNum = parseInt(currentImage[0]) - 1;
+                                } else {
+                                    newImageNum = parseInt(currentImage[0]) + 1;
+                                };
+                            }
+                            if (goToNext || goToPrev) {
+                                // If it's the last picture, we want to jump to the next gallery
+                                var currentGallery = $('.active-gallery');
+                                var setNextGallery = false;
+                                var galleries = $('#portofolio a');
+                                var numberOfGalleries = galleries.length;
+                                $("#nextBtn").unbind();
+                                $("#prevBtn").unbind();
+                                $('#slideshow').on('click', '#nextBtn', function () {
+                                    console.log('next');
+                                });
+                                $('#slideshow').on('click', '#prevBtn', function () {
+                                    console.log('prev');
+                                });
+                                $('#portofolio a').removeClass('active-gallery');
+                                if (goToNext) {
+                                    $.each($('#portofolio a'), function(i, gallery) {
+                                        if (setNextGallery) {
+                                            nextGallery = gallery;
+                                            setNextGallery = false;
+                                        };
+                                        if (gallery == currentGallery[0] && (i+1) != numberOfGalleries) {
+                                            setNextGallery = true;
+                                        } else if (gallery == currentGallery[0] && (i+1) == numberOfGalleries) {
+                                            nextGallery = galleries[0];
+                                        };
+                                    });
+                                    $(nextGallery).addClass('active-gallery');
+                                    load_gallery(nextGallery, 'start');
+                                } else if (goToPrev) {
+                                    $.each($('#portofolio a'), function(i, gallery) {
+                                        if (gallery == currentGallery[0] && (i+1) != 1) {
+                                            nextGallery = galleries[0];
+                                        } else if (gallery == currentGallery[0] && (i+1) == 1) {
+                                            nextGallery = galleries[numberOfGalleries - 1];
+                                        };
+                                    });
+                                    $(nextGallery).addClass('active-gallery');
+                                    load_gallery(nextGallery, 'end');
+                                };
+                            }
+                            $(".image-list-ul").html(newImageNum + ' / ' + j);
+                            
+                            // Calculate sizes
+                            w=window,d=document, e=d.documentElement, g=d.getElementsByTagName('body')[0], x=w.innerWidth||e.clientWidth||g.clientWidth, y=w.innerHeight||e.clientHeight||g.clientHeight;
                             y = x * imageRatio;
-                            // This is to adjust the jCarousel dom element
+                            
+                            // We need to adjust the jCarousel dom elements
                             ulWidth = $(".galleri-carousel ul li").length * x;
-                            var curLeft = $(".active-gallery-image").html().split('.');
-                            var newLeft = x * parseFloat(curLeft[0]) * -1;
+                            var newLeft = x * parseFloat(newImageNum) * -1;
                             $(".galleri-carousel ul").css({"width":ulWidth, "left":newLeft});
                             
+                            // Fade back the picture because we are done tampering with it
                             $(a).parent().fadeTo(250, 1);
                         }
                     });
@@ -124,11 +187,11 @@
         }
         
         $(window).resize(function() {
-            w=window,d=document,e=d.documentElement,g=d.getElementsByTagName('body')[0],x=w.innerWidth||e.clientWidth||g.clientWidth,y=w.innerHeight||e.clientHeight||g.clientHeight;
+            w=window, d=document, e=d.documentElement, g=d.getElementsByTagName('body')[0], x=w.innerWidth||e.clientWidth||g.clientWidth, y=w.innerHeight||e.clientHeight||g.clientHeight;
             y = x * imageRatio;
             // This is to adjust the jCarousel dom element
             ulWidth = $(".galleri-carousel ul li").length * x;
-            var curLeft = $(".active-gallery-image").html().split('.');
+            var curLeft = $(".image-list-ul").html().split('/');
             var newLeft = x * parseFloat(curLeft[0]) * -1;
             
             $(".galleri-carousel ul").css({"width":ulWidth, "left":newLeft});
@@ -149,16 +212,22 @@
         });
         $('#portofolio > li').on('click', 'a', function () {
             $('#portofolio a').removeClass('active-gallery');
-            $(this).attr('class', 'active-gallery');
-            load_gallery(this);
+            $(this).addClass('active-gallery');
+            load_gallery(this, 'start');
             return false;
+        });
+        $('#slideshow').on('click', '#nextBtn', function () {
+            console.log('next');
+        });
+        $('#slideshow').on('click', '#prevBtn', function () {
+            console.log('prev');
         });
         
         if (galleryNotSet) {
             var firstGallery = $('#portofolio a').get(0);
             $('#portofolio a').removeClass('active-gallery');
-            $(firstGallery).attr('class', 'active-gallery');
-            load_gallery(firstGallery);
+            $(firstGallery).addClass('active-gallery');
+            load_gallery(firstGallery, 'start');
         };
         content.fadeIn(200);
     });
