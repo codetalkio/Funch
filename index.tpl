@@ -81,7 +81,7 @@
                     $(".image-list-ul").remove();
                     $(elem).parent().append('<span class="image-list-ul">' + newImageNum + ' / ' + j + '</span>');
                     // Load gallery content
-                    $('.galleri-carousel').npFullBgImg(allImagesList[0], {fadeInSpeed: 400, center: false, centerX: true});
+                    $('.galleri-carousel').npFullBgImg(allImagesList[newImageNum - 1], {fadeInSpeed: 400, center: false, centerX: true});
                     galleryContainer.fadeIn(400);
                 }
             });
