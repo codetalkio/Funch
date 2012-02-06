@@ -10,15 +10,11 @@
     <![endif]-->
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript" charset="utf-8"></script>
     <script src="{% JS_ROOT %}head.load.min.js" type="text/javascript" charset="utf-8"></script>
-    <script src="{% THEME_ROOT %}jcarousellite_1.0.1.min.js" type="text/javascript" charset="utf-8"></script>
+    <script src="{% THEME_ROOT %}jquery.npFullBgImg.js" type="text/javascript" charset="utf-8"></script>
     <script>
     !window.jQuery && document.write('<script src="{% JS_ROOT %}jquery-1.7.1.min.js"><\/script>');
     //{% AJAX %}
     $(document).ready(function () {
-        var w=window, d=document, e=d.documentElement, g=d.getElementsByTagName('body')[0], x=w.innerWidth||e.clientWidth||g.clientWidth, y=w.innerHeight||e.clientHeight||g.clientHeight;
-        var y = y * imageRatio;
-        var originalX = x;
-        var imageRatio = 800 / 1280;
         var upM = false;
         var upC = false;
         var menu = $('#menu');
@@ -29,8 +25,8 @@
         var galleryUl = $(".galleri-carousel ul");
         var galleryLi = $(".galleri-carousel ul li");
         var galleryNotSet = true;
-        var originalUlLeft = 1280;
         var loadingImg = '<div class="slideshow-loading"><img src="<?php print RESOURCES_ROOT; ?>img/load.gif" alt="Loading..."></div>';
+        var allImagesList = new Array;
         
         function toggle_menu() {
             if(upM) {
@@ -68,138 +64,61 @@
                     var goList = "";
                     var imageList = "";
                     var pathPrefix = "<?php print RESOURCES_ROOT . 'uploads' . DS; ?>";
-                    w=window,d=document, e=d.documentElement, g=d.getElementsByTagName('body')[0], x=w.innerWidth||e.clientWidth||g.clientWidth, y=w.innerHeight||e.clientHeight||g.clientHeight;
-                    y = x * imageRatio;
                     var j = 1;
+                    var images = new Array;
                     $.each(json, function(i, item) {
                         var goId = 'gallery-image-' + item.id;
                         j = i;
-                        
-                        imageList += '<li imagenum="' + i + '" image="' + goId + '">';
-                        imageList += '<img class="gallery-image" width="' 
-                                  + x + 'px" height="' + y + 'px" src="' 
-                                  + pathPrefix + item.img_file 
-                                  + '" alt="' + item.name + '">';
-                        imageList += '</li>';
+                        images.push(pathPrefix + item.img_file);
                     });
+                    allImagesList = images;
                     j = j + 1;
                     if (pos == 'end') {
                         var newImageNum = j;
                     } else {
                         var newImageNum = 1;
                     }
-                    console.log(newImageNum);
                     $(".image-list-ul").remove();
                     $(elem).parent().append('<span class="image-list-ul">' + newImageNum + ' / ' + j + '</span>');
                     // Load gallery content
-                    galleryContainer.html('<ul>' + imageList + '</ul>');
-                    galleryContainer.fadeIn(200);
-                    // Activate jCarousel for the gallery
-                    galleryContainer.jCarouselLite({
-                        start: (newImageNum - 1),
-                        visible: 1,
-                        circular: true,
-                        btnNext: "#nextBtn",
-                        btnPrev: "#prevBtn",
-                        // btnGo: goArray,
-                        beforeStart: function(a) {
-                            prevImg = $(a).attr('imagenum');
-                            $(a).parent().fadeTo(100, 0);
-                        },
-                        afterEnd: function(a) {
-                            var goToNext = false;
-                            var goToPrev = false;
-                            var allImages = $(".image-list-ul").html().split('/');
-                            j = parseInt(allImages[1]);
-                            // set the image number
-                            var currentImage = $(".image-list-ul").html().split('/');
-                            nextImg = $(a).attr('imagenum');
-                            if (prevImg - nextImg > 1) {
-                                goToNext = true;
-                            } else if (nextImg - prevImg > 1) {
-                                goToPrev = true;
-                            } else {
-                                if (prevImg > nextImg) {
-                                    newImageNum = parseInt(currentImage[0]) - 1;
-                                } else {
-                                    newImageNum = parseInt(currentImage[0]) + 1;
-                                };
-                            }
-                            if (goToNext || goToPrev) {
-                                // If it's the last picture, we want to jump to the next gallery
-                                var currentGallery = $('.active-gallery');
-                                var setNextGallery = false;
-                                var galleries = $('#portofolio a');
-                                var numberOfGalleries = galleries.length;
-                                $("#nextBtn").unbind();
-                                $("#prevBtn").unbind();
-                                $('#slideshow').on('click', '#nextBtn', function () {
-                                    console.log('next');
-                                });
-                                $('#slideshow').on('click', '#prevBtn', function () {
-                                    console.log('prev');
-                                });
-                                $('#portofolio a').removeClass('active-gallery');
-                                if (goToNext) {
-                                    $.each($('#portofolio a'), function(i, gallery) {
-                                        if (setNextGallery) {
-                                            nextGallery = gallery;
-                                            setNextGallery = false;
-                                        };
-                                        if (gallery == currentGallery[0] && (i+1) != numberOfGalleries) {
-                                            setNextGallery = true;
-                                        } else if (gallery == currentGallery[0] && (i+1) == numberOfGalleries) {
-                                            nextGallery = galleries[0];
-                                        };
-                                    });
-                                    $(nextGallery).addClass('active-gallery');
-                                    load_gallery(nextGallery, 'start');
-                                } else if (goToPrev) {
-                                    $.each($('#portofolio a'), function(i, gallery) {
-                                        if (gallery == currentGallery[0] && (i+1) != 1) {
-                                            nextGallery = galleries[0];
-                                        } else if (gallery == currentGallery[0] && (i+1) == 1) {
-                                            nextGallery = galleries[numberOfGalleries - 1];
-                                        };
-                                    });
-                                    $(nextGallery).addClass('active-gallery');
-                                    load_gallery(nextGallery, 'end');
-                                };
-                            }
-                            $(".image-list-ul").html(newImageNum + ' / ' + j);
-                            
-                            // Calculate sizes
-                            w=window,d=document, e=d.documentElement, g=d.getElementsByTagName('body')[0], x=w.innerWidth||e.clientWidth||g.clientWidth, y=w.innerHeight||e.clientHeight||g.clientHeight;
-                            y = x * imageRatio;
-                            
-                            // We need to adjust the jCarousel dom elements
-                            ulWidth = $(".galleri-carousel ul li").length * x;
-                            var newLeft = x * parseFloat(newImageNum) * -1;
-                            $(".galleri-carousel ul").css({"width":ulWidth, "left":newLeft});
-                            
-                            // Fade back the picture because we are done tampering with it
-                            $(a).parent().fadeTo(250, 1);
-                        }
-                    });
-                    originalUlLeft = $(".galleri-carousel ul").css("left");
+                    $('.galleri-carousel').npFullBgImg(allImagesList[0], {fadeInSpeed: 400, center: false, centerX: true});
+                    galleryContainer.fadeIn(400);
                 }
             });
         }
+        function shift_gallery(direction) {
+            var currentGallery = $('.active-gallery');
+            var setNextGallery = false;
+            var galleries = $('#portofolio a');
+            var numberOfGalleries = galleries.length;
+            $('#portofolio a').removeClass('active-gallery');
+            if (direction == 'next') {
+                $.each($('#portofolio a'), function(i, gallery) {
+                    if (setNextGallery) {
+                        nextGallery = gallery;
+                        setNextGallery = false;
+                    };
+                    if (gallery == currentGallery[0] && (i+1) != numberOfGalleries) {
+                        setNextGallery = true;
+                    } else if (gallery == currentGallery[0] && (i+1) == numberOfGalleries) {
+                        nextGallery = galleries[0];
+                    };
+                });
+                $(nextGallery).addClass('active-gallery');
+                load_gallery(nextGallery, 'start');
+            } else if (direction == 'prev') {
+                $.each($('#portofolio a'), function(i, gallery) {
+                    if (gallery == currentGallery[0] && (i) >= 1) {
+                        nextGallery = galleries[i - 1];
+                    } else if (gallery == currentGallery[0] && (i) == 0) {
+                        nextGallery = galleries[numberOfGalleries - 1];
+                    };
+                });
+                $(nextGallery).addClass('active-gallery');
+                load_gallery(nextGallery, 'end');
+            };
+        }
         
-        $(window).resize(function() {
-            w=window, d=document, e=d.documentElement, g=d.getElementsByTagName('body')[0], x=w.innerWidth||e.clientWidth||g.clientWidth, y=w.innerHeight||e.clientHeight||g.clientHeight;
-            y = x * imageRatio;
-            // This is to adjust the jCarousel dom element
-            ulWidth = $(".galleri-carousel ul li").length * x;
-            var curLeft = $(".image-list-ul").html().split('/');
-            var newLeft = x * parseFloat(curLeft[0]) * -1;
-            
-            $(".galleri-carousel ul").css({"width":ulWidth, "left":newLeft});
-            galleryContainer.css({"width":x, "height":y});
-            $(".galleri-carousel ul li").css({"width":x, "height":y});
-            $(".gallery-image").css({"width":x, "height":y});
-            $(".gallery-image").attr({"width":x, "height":y});
-        });
         $('#menuToggle').click(function () {
             toggle_menu();
         });
@@ -217,10 +136,26 @@
             return false;
         });
         $('#slideshow').on('click', '#nextBtn', function () {
-            console.log('next');
+            var allImages = $(".image-list-ul").html().split('/');
+            j = parseInt(allImages[1]);
+            newImageNum = parseInt(allImages[0]) + 1;
+            if (newImageNum > j) {
+                shift_gallery('next');
+            } else {
+                $(".image-list-ul").html(newImageNum + ' / ' + j);
+                $('.galleri-carousel').npFullBgImg(allImagesList[parseInt(allImages[0])], {fadeInSpeed: 400, center: false, centerX: true});
+            }
         });
         $('#slideshow').on('click', '#prevBtn', function () {
-            console.log('prev');
+            var allImages = $(".image-list-ul").html().split('/');
+            j = parseInt(allImages[1]);
+            newImageNum = parseInt(allImages[0]) - 1;
+            if (newImageNum < 1) {
+                shift_gallery('prev');
+            } else {
+                $(".image-list-ul").html(newImageNum + ' / ' + j);
+                $('.galleri-carousel').npFullBgImg(allImagesList[newImageNum - 1], {fadeInSpeed: 400, center: false, centerX: true});
+            }
         });
         
         if (galleryNotSet) {
@@ -282,9 +217,7 @@
 
         <div id="slideshow">
             <div id="loading-placeholder"></div>
-            <div class="galleri-carousel">
-                <ul id="galleri-carousel"></ul>
-            </div>
+            <div class="galleri-carousel"></div>
             <span id="prevBtn" class="arrow previous"></span>
             <span id="nextBtn" class="arrow next"></span>
         </div>
