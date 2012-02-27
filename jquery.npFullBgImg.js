@@ -28,7 +28,7 @@ header($ExpStr);
    				 center: false,
 				 centerX: false
 			};
-			
+			$("#slideshow #loading-placeholder").fadeIn(200);
 			var opts = $.extend(defaults, options);
 			var targetContainer = $(this); 
 			//create image
@@ -68,16 +68,17 @@ header($ExpStr);
 					}
 
 	            });
+                $("#slideshow #loading-placeholder").fadeOut(200);
 	        }).error(function () {
 	            // got an error
-	            alert('image not loaded');
+	            //console.log('image not loaded');
 	        }).attr('src', imgPath);
 	        //}).attr('src', imgPath + '?random=' + (new Date()).getTime());
 	    	}
 		});
 	
 	$(window).bind("resize", function(){
-			resizeImg($(window).width(), $(window).height(), $(imageArray[0]).width(), $(imageArray[0]).height());		  			
+			resizeImg($(window).width(), $(window).height(), $(imageArray[0]).width(), $(imageArray[0]).height());	  			
 	});
 
   	function resizeImg(sw, sh, imgw, imgh, targetContainer){

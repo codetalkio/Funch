@@ -31,7 +31,7 @@
         var loadingImg = '<div class="slideshow-loading"><div>Loading <img src="<?php print RESOURCES_ROOT; ?>img/load.gif" alt="" /></div></div>';
         var allImagesList = new Array;
         
-        loadingContainer.fadeIn(0);
+        loadingContainer.fadeOut(0);
         loadingContainer.html(loadingImg);
         
         function toggle_menu() {
@@ -62,8 +62,6 @@
         }
         function load_gallery(elem, pos) {
             var projectId = $(elem).attr('href');
-            
-            loadingContainer.fadeIn(200);
             galleryContainer.fadeOut(0);
             
             $.ajax({
@@ -98,7 +96,7 @@
                     $(elem).parent().append('<span class="image-list-ul">' + newImageNum + ' / ' + j + '</span>');
                     // Load gallery content
                     $('.galleri-carousel').npFullBgImg(allImagesList[newImageNum - 1], {fadeInSpeed: 400, center: true, centerX: true});
-                    loadingContainer.fadeOut(200);
+                    
                     galleryContainer.fadeIn(400);
                 }
             });
@@ -149,10 +147,8 @@
             if (newImageNum > j) {
                 shift_gallery('next');
             } else {
-                loadingContainer.fadeIn(200);
                 $(".image-list-ul").html(newImageNum + ' / ' + j);
                 $('.galleri-carousel').npFullBgImg(allImagesList[parseInt(allImages[0])], {fadeInSpeed: 400, center: true, centerX: true});
-                loadingContainer.fadeOut(200);
             }
             upC = false;
             toggle_content();
@@ -164,10 +160,8 @@
             if (newImageNum < 1) {
                 shift_gallery('prev');
             } else {
-                loadingContainer.fadeIn(200);
                 $(".image-list-ul").html(newImageNum + ' / ' + j);
                 $('.galleri-carousel').npFullBgImg(allImagesList[newImageNum - 1], {fadeInSpeed: 400, center: true, centerX: true});
-                loadingContainer.fadeOut(200);
             }
             upC = false;
             toggle_content();
@@ -195,6 +189,7 @@
         prevBtn.bind('click', function () {
             prev_image();
         });
+        
         $(document).keydown(function (e) {
             if (e.keyCode == 37) { 
                 prev_image(); // Left arrow
