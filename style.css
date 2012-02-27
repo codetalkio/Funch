@@ -49,6 +49,11 @@ header, nav, section, article, hgroup, footer, address { display:block; }
 #contentToggle {
     margin:-3px -2px 0 0;
 }
+.box-shadow {
+    -webkit-box-shadow: 2px 2px 15px rgba(50, 50, 50, 0.65);
+    -moz-box-shadow: 2px 2px 15px rgba(50, 50, 50, 0.65);
+    box-shadow: 2px 2px 15px rgba(50, 50, 50, 0.65);
+}
 nav {
     position:absolute;
     top:0px;
@@ -65,9 +70,6 @@ nav {
     nav table {
         border:0px;
         border-spacing:0;
-        -moz-box-shadow:  5px 8px 7px rgba(50, 50, 50, 0.65);
-        -webkit-box-shadow:  5px 8px 7px rgba(50, 50, 50, 0.65);
-        box-shadow:  5px 8px 7px rgba(50, 50, 50, 0.65);
     }
     nav .logo-fill {
         background:#fff;
@@ -87,12 +89,8 @@ nav {
     nav #menu {
         background:#fff;
         padding:5px 10px 10px 10px;
-        -webkit-box-shadow: 5px 5px 6px rgba(50, 50, 50, 0.65);
-        box-shadow: 5px 5px 6px rgba(50, 50, 50, 0.65);
-        -moz-box-shadow: 5px 5px 6px rgba(50, 50, 50, 0.65);
     }
     nav a {
-        display: block;
         text-decoration: none;
         font-size: 12px;
         font-family: Arial, Tahoma, sans-serif;
@@ -133,7 +131,7 @@ nav {
             border-right:0px;
         }
     nav #menu #portofolio {
-        padding:10px 10px 15px 10px;
+        padding:30px 10px 15px 10px;
         text-decoration: none;
         font-size: 12px;
         font-family: Arial, Tahoma, sans-serif;
@@ -141,6 +139,9 @@ nav {
     }
     nav #menu #portofolio ul li {
         height:auto;
+    }
+    nav #menu .image-list-ul {
+        padding-left: 10px;
     }
 
 /* content */
@@ -161,12 +162,15 @@ nav {
     width:500px; 
     padding:10px;
     z-index:9;
-}
-#content h1{
-    margin:50px 0 30px 0;
-    font-size:45px;
-    font-weight:bold;
-}
+    -webkit-box-shadow: 4px 4px 12px rgba(50, 50, 50, 0.65);
+    -moz-box-shadow: 4px 4px 12px rgba(50, 50, 50, 0.65);
+    box-shadow: 4px 4px 12px rgba(50, 50, 50, 0.65);
+    }
+    #content h1{
+        margin:50px 0 30px 0;
+        font-size:45px;
+        font-weight:bold;
+    }
 
 /* footer */
 footer{
@@ -181,23 +185,22 @@ footer{
     font: 10px "lucida grande";
     color: #505050;
     padding-bottom:10px;
-}
-footer a {
-    text-decoration:none;
-    font: 10px "lucida grande";
-    color: #505050;
-}
-footer a:link {color:#505050;}
-footer a:visited {color:#505050;}
-footer a:hover {color:#ff6a57;}
-footer a:active {color:#ff6a57;}
+    }
+    footer a {
+        text-decoration:none;
+        font: 10px "lucida grande";
+        color: #505050;
+    }
+    footer a:link {color:#505050;}
+    footer a:visited {color:#505050;}
+    footer a:hover {color:#ff6a57;}
+    footer a:active {color:#ff6a57;}
 
 
 /* Pagination */
 .paginate {
     font: 12px 'Lucida Grande', Tahoma, Verdana, Sans-Serif;
 }
-
 a.paginate {
     font: 12px 'Lucida Grande', Tahoma, Verdana, Sans-Serif;
     border-left: 1px solid #DEDEDE;
@@ -248,20 +251,22 @@ span.inactive {
     height:100%;
     text-align:center;
     min-width:600px;
-}
-#slideshow .arrow{
-    height:86px;
-    width:60px;
-    position:absolute;
-    background: url('{% THEME %}/img/arrows.png') no-repeat;
-    top:400px;
-    margin:-33px 0 0 0;
-    cursor:pointer;
-    z-index:5000;
-}
-
-#slideshow .previous{ background-position:left top;left:0;}
-#slideshow .previous:hover{ background-position:left bottom;}
-
-#slideshow .next{ background-position:right top;right:0;}
-#slideshow .next:hover{ background-position:right bottom;}
+    }
+    #slideshow .arrow {
+        cursor:pointer;
+        z-index:5000;
+        display:none;
+    }
+    #slideshow .arrow.previous {
+        position:absolute;
+        top:450px;
+        left:55px;
+    }
+    #slideshow .arrow.next {
+        position:absolute;
+        top:450px;
+        right:55px;
+    }
+    #slideshow .arrow img {
+        width:55px;
+    }

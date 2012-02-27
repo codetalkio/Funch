@@ -17,24 +17,32 @@
     $(document).ready(function () {
         var upM = false;
         var upC = false;
+        var nextBtn = $('#nextBtn');
+        var prevBtn = $('#prevBtn');
+        var nav = $('nav');
+        var navTable = $('nav table');
         var menu = $('#menu');
         var menuToggleImg = $('#menuToggle');
         var content = $('#content');
         var galleryContent = $("#galleri-carousel");
         var galleryContainer = $(".galleri-carousel");
-        var galleryUl = $(".galleri-carousel ul");
-        var galleryLi = $(".galleri-carousel ul li");
         var galleryNotSet = true;
         var loadingImg = '<div class="slideshow-loading"><img src="<?php print RESOURCES_ROOT; ?>img/load.gif" alt="Loading..."></div>';
         var allImagesList = new Array;
         
         function toggle_menu() {
             if(upM) {
-                menu.slideDown(200);
+                navTable.removeClass('box-shadow');
+                menu.slideDown(200, function() {
+                    nav.addClass('box-shadow');
+                });
                 menuToggleImg.attr('src', '{% THEME_ROOT %}img/minimize.png');
                 upM = false;
             } else {
-                menu.slideUp(200);
+                nav.removeClass('box-shadow');
+                menu.slideUp(200, function() {
+                    navTable.addClass('box-shadow');
+                });
                 menuToggleImg.attr('src', '{% THEME_ROOT %}img/expand.png');
                 upM = true;
             }
@@ -64,13 +72,17 @@
                     var goList = "";
                     var imageList = "";
                     var pathPrefix = "<?php print RESOURCES_ROOT . 'uploads' . DS; ?>";
-                    var j = 1;
+                    var j = 0;
                     var images = new Array;
                     $.each(json, function(i, item) {
                         var goId = 'gallery-image-' + item.id;
                         j = i;
                         images.push(pathPrefix + item.img_file);
                     });
+                    if (j == 0) {
+                        shift_gallery('next', true);
+                        return;
+                    };
                     allImagesList = images;
                     j = j + 1;
                     if (pos == 'end') {
@@ -81,12 +93,15 @@
                     $(".image-list-ul").remove();
                     $(elem).parent().append('<span class="image-list-ul">' + newImageNum + ' / ' + j + '</span>');
                     // Load gallery content
-                    $('.galleri-carousel').npFullBgImg(allImagesList[newImageNum - 1], {fadeInSpeed: 400, center: false, centerX: true});
+                    $('.galleri-carousel').npFullBgImg(allImagesList[newImageNum - 1], {fadeInSpeed: 400, center: true, centerX: true});
                     galleryContainer.fadeIn(400);
                 }
             });
         }
-        function shift_gallery(direction) {
+        function shift_gallery(direction, arrowkeys) {
+            if (arrowkeys != true) {
+                arrowkeys = false;
+            };
             var currentGallery = $('.active-gallery');
             var setNextGallery = false;
             var galleries = $('#portofolio a');
@@ -115,8 +130,38 @@
                     };
                 });
                 $(nextGallery).addClass('active-gallery');
-                load_gallery(nextGallery, 'end');
+                if (arrowkeys) {
+                    load_gallery(nextGallery, 'start');
+                } else {
+                    load_gallery(nextGallery, 'end');
+                }
             };
+        }
+        function next_image() {
+            var allImages = $(".image-list-ul").html().split('/');
+            j = parseInt(allImages[1]);
+            newImageNum = parseInt(allImages[0]) + 1;
+            if (newImageNum > j) {
+                shift_gallery('next');
+            } else {
+                $(".image-list-ul").html(newImageNum + ' / ' + j);
+                $('.galleri-carousel').npFullBgImg(allImagesList[parseInt(allImages[0])], {fadeInSpeed: 400, center: true, centerX: true});
+            }
+            upC = false;
+            toggle_content();
+        }
+        function prev_image() {
+            var allImages = $(".image-list-ul").html().split('/');
+            j = parseInt(allImages[1]);
+            newImageNum = parseInt(allImages[0]) - 1;
+            if (newImageNum < 1) {
+                shift_gallery('prev');
+            } else {
+                $(".image-list-ul").html(newImageNum + ' / ' + j);
+                $('.galleri-carousel').npFullBgImg(allImagesList[newImageNum - 1], {fadeInSpeed: 400, center: true, centerX: true});
+            }
+            upC = false;
+            toggle_content();
         }
         
         $('#menuToggle').click(function () {
@@ -125,7 +170,7 @@
         $('#contentToggle').click(function () {
             toggle_content();
         });
-        $('.ajax-menu').on('click', 'a', function () {
+        $('.ajax-menu a').bind('click', function () {
             content.fadeIn();
             upC = false;
         });
@@ -135,26 +180,37 @@
             load_gallery(this, 'start');
             return false;
         });
-        $('#slideshow').on('click', '#nextBtn', function () {
-            var allImages = $(".image-list-ul").html().split('/');
-            j = parseInt(allImages[1]);
-            newImageNum = parseInt(allImages[0]) + 1;
-            if (newImageNum > j) {
-                shift_gallery('next');
-            } else {
-                $(".image-list-ul").html(newImageNum + ' / ' + j);
-                $('.galleri-carousel').npFullBgImg(allImagesList[parseInt(allImages[0])], {fadeInSpeed: 400, center: false, centerX: true});
+        nextBtn.bind('click', function () {
+            next_image();
+        });
+        prevBtn.bind('click', function () {
+            prev_image();
+        });
+        $(document).keydown(function (e) {
+            if (e.keyCode == 37) { 
+                prev_image(); // Left arrow
+            } else if (e.keyCode == 39) {
+                next_image(); // Right arrow
+            } else if (e.keyCode == 38) {
+                shift_gallery('prev', true);
+            } else if (e.keyCode == 40) {
+                shift_gallery('next', true);
             }
         });
-        $('#slideshow').on('click', '#prevBtn', function () {
-            var allImages = $(".image-list-ul").html().split('/');
-            j = parseInt(allImages[1]);
-            newImageNum = parseInt(allImages[0]) - 1;
-            if (newImageNum < 1) {
-                shift_gallery('prev');
+        
+        $(document).mousemove(function(e){
+            var windowHeight = $(window).height();
+            var windowWidth = $(window).width();
+            var windowX = windowWidth / 2;
+            if (e.pageX < windowX || e.pageX > (windowWidth - 20) || e.pageY < 20 || e.pageY > (windowHeight - 20)) {
+                nextBtn.fadeOut(100);
             } else {
-                $(".image-list-ul").html(newImageNum + ' / ' + j);
-                $('.galleri-carousel').npFullBgImg(allImagesList[newImageNum - 1], {fadeInSpeed: 400, center: false, centerX: true});
+                nextBtn.fadeIn(100);
+            }
+            if (e.pageX > windowX || e.pageX < 20 || e.pageY < 20 || e.pageY > (windowHeight - 20)) {
+                prevBtn.fadeOut(100);
+            } else {
+                prevBtn.fadeIn(100);
             }
         });
         
@@ -172,7 +228,7 @@
 <body>
     <div id="container">
         
-        <nav>
+        <nav class="box-shadow">
             <table>
                 <tr>
                     <td colspan="3" class="logo-fill">
@@ -218,8 +274,8 @@
         <div id="slideshow">
             <div id="loading-placeholder"></div>
             <div class="galleri-carousel"></div>
-            <span id="prevBtn" class="arrow previous"></span>
-            <span id="nextBtn" class="arrow next"></span>
+            <span id="prevBtn" class="arrow previous"><img src="{% THEME_ROOT %}img/arrow-left.png"></span>
+            <span id="nextBtn" class="arrow next"><img src="{% THEME_ROOT %}img/arrow-right.png"></span>
         </div>
         
     </div>
