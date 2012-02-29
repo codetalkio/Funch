@@ -26,9 +26,10 @@ header($ExpStr);
 			defaults = {
 				 fadeInSpeed: 1000,
    				 center: false,
-				 centerX: false
+				 centerX: false,
+                 beforeLoad: false,
+                 afterLoad: false
 			};
-			$("#slideshow #loading-placeholder").fadeIn(200);
 			var opts = $.extend(defaults, options);
 			var targetContainer = $(this); 
 			//create image
@@ -39,7 +40,12 @@ header($ExpStr);
  	 		if(firstLoad === true) {
  	 			$(targetContainer).fadeTo(10, 0)
  	 		}
-			
+            
+            if (opts.beforeLoad) {
+                if(typeof opts.beforeLoad === 'function') {
+                    opts.beforeLoad.call(this);
+                }
+            }
 	        $(img).load(function () {
 	        	//this is a hack to stop a flash of the image sometimes
   				$(img).fadeOut(10, 0);
@@ -50,8 +56,7 @@ header($ExpStr);
 	            //resize image
 
 				resizeImg($(window).width(), $(window).height(), $(img).width(), $(img).height());
-
-				
+                
 				if(firstLoad === true) {
  	 				$(targetContainer).fadeTo(10, 1)
  	 				firstLoad = false;
@@ -68,7 +73,11 @@ header($ExpStr);
 					}
 
 	            });
-                $("#slideshow #loading-placeholder").fadeOut(200);
+                if (opts.afterLoad) {
+                    if(typeof opts.afterLoad === 'function') {
+                        opts.afterLoad.call(this);
+                    }
+                }
 	        }).error(function () {
 	            // got an error
 	            //console.log('image not loaded');

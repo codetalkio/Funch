@@ -7,7 +7,6 @@ body {
     margin:0 auto; 
     padding:0px; 
     font: 13px/18px 'Lucida Grande', Tahoma, Verdana, Sans-Serif;
-    min-width:1100px;
     height:100%;
 }
 h1, h2, h3 {
@@ -15,17 +14,17 @@ h1, h2, h3 {
     font-weight:lighter;
 }
 p { font-size: 13px; }
-a:link {color:#2d81d5; text-decoration: none;}
-a:visited {color:#2d81d5;} 
-a:hover{color:#ff6a57;text-decoration: underline;} 
-a:active {color:#ff6a57; font-weight:bold;}
+a:link { color:#2d81d5; text-decoration: none; }
+a:visited { color:#2d81d5; } 
+a:hover{ color:#ff6a57;text-decoration: underline; } 
+a:active { color:#ff6a57; font-weight:bold; }
 
-div{background:none;}
+div{ background:none; }
 /* Note: Make HTML 5 elements block-level for consistent styling */
 header, nav, section, article, hgroup, footer, address { display:block; }
 
 /* container holding the elements: header, nav and #content */
-#container{
+#container {
     position:relative;
     width:100%;
     margin:0;
@@ -50,9 +49,9 @@ header, nav, section, article, hgroup, footer, address { display:block; }
     margin:-3px -2px 0 0;
 }
 .box-shadow {
-    -webkit-box-shadow: 2px 2px 15px rgba(50, 50, 50, 0.65);
-    -moz-box-shadow: 2px 2px 15px rgba(50, 50, 50, 0.65);
-    box-shadow: 2px 2px 15px rgba(50, 50, 50, 0.65);
+    -webkit-box-shadow: 2px 2px 10px rgba(50, 50, 50, 0.65);
+    -moz-box-shadow: 2px 2px 10px rgba(50, 50, 50, 0.65);
+    box-shadow: 2px 2px 10px rgba(50, 50, 50, 0.65);
 }
 nav {
     position:absolute;
@@ -152,13 +151,14 @@ nav {
     display: table-cell;
     vertical-align: middle;
 }
-#content{
+#content {
     display:none;
+    overflow:hidden;
     position:absolute;
-    top:120px;
+    top:100px;
     left:210px;
     background:#fff;
-    min-height: 200px;
+    min-height: 150px;
     width:500px; 
     padding:10px;
     z-index:9;
@@ -166,14 +166,14 @@ nav {
     -moz-box-shadow: 4px 4px 12px rgba(50, 50, 50, 0.65);
     box-shadow: 4px 4px 12px rgba(50, 50, 50, 0.65);
     }
-    #content h1{
+    #content h1 {
         margin:50px 0 30px 0;
         font-size:45px;
         font-weight:bold;
     }
 
 /* footer */
-footer{
+footer {
     display:none;
     clear:both;
     position:relative;
@@ -207,7 +207,7 @@ a.paginate {
     padding: 1px 6px;
     color: #005fad;
 }
-a.paginate:last-child{
+a.paginate:last-child {
     border-right: 1px solid #DEDEDE;
 }
 
@@ -220,7 +220,7 @@ a.current {
     font-weight:700;
     text-decoration: none;
 }
-a.current:last-child{
+a.current:last-child {
     border-right: 1px solid #DEDEDE;
 }
 
@@ -247,9 +247,9 @@ span.inactive {
         line-height:30px;
         background:#fff;
         margin:0 auto;
-        -webkit-box-shadow: 4px 4px 12px rgba(50, 50, 50, 0.65);
-        -moz-box-shadow: 4px 4px 12px rgba(50, 50, 50, 0.65);
-        box-shadow: 4px 4px 12px rgba(50, 50, 50, 0.65);
+        -webkit-box-shadow: 4px 4px 10px rgba(50, 50, 50, 0.65);
+        -moz-box-shadow: 4px 4px 10px rgba(50, 50, 50, 0.65);
+        box-shadow: 4px 4px 10px rgba(50, 50, 50, 0.65);
         }
         .slideshow-loading div img {
             height:16px;
@@ -260,7 +260,7 @@ span.inactive {
     width:100%;
     height:100%;
 }
-#slideshow{
+#slideshow {
     position:relative;
     z-index:8;
     margin:0;

@@ -28,11 +28,23 @@
         var galleryContainer = $(".galleri-carousel");
         var galleryNotSet = true;
         var loadingContainer = $("#slideshow #loading-placeholder");
-        var loadingImg = '<div class="slideshow-loading"><div>Loading <img src="<?php print RESOURCES_ROOT; ?>img/load.gif" alt="" /></div></div>';
+        var loadingImg = '<div class="slideshow-loading"><div>Loading <img src="<?php print RESOURCES_ROOT; ?>img/load.gif" alt="..." /></div></div>';
         var allImagesList = new Array;
         
         loadingContainer.fadeOut(0);
         loadingContainer.html(loadingImg);
+        
+        var imgOptions = {
+            fadeInSpeed: 400,
+            center: true,
+            centerX: true,
+            beforeLoad: function() {
+                loadingContainer.fadeIn(200);
+            },
+            afterLoad: function() {
+                loadingContainer.fadeOut(200);
+            }
+        }
         
         function toggle_menu() {
             if(upM) {
@@ -60,9 +72,8 @@
                 upC = true;
             }
         }
-        function load_gallery(elem, pos) {
+        function load_gallery(elem, pos, arrowkeys) {
             var projectId = $(elem).attr('href');
-            galleryContainer.fadeOut(0);
             
             $.ajax({
                 url: '<?php print URL_ROOT; ?>interact.php',
@@ -81,10 +92,13 @@
                         j = i;
                         images.push(pathPrefix + item.img_file);
                     });
-                    if (j == 0) {
-                        shift_gallery('next', true);
+                    if (j == 0 && arrowkeys == 'up' || j == 0 && pos == 'end') {
+                        shift_gallery('prev', arrowkeys, pos);
                         return;
-                    };
+                    } else if (j == 0) {
+                        shift_gallery('next', arrowkeys, pos);
+                        return;
+                    }
                     allImagesList = images;
                     j = j + 1;
                     if (pos == 'end') {
@@ -95,14 +109,12 @@
                     $(".image-list-ul").remove();
                     $(elem).parent().append('<span class="image-list-ul">' + newImageNum + ' / ' + j + '</span>');
                     // Load gallery content
-                    $('.galleri-carousel').npFullBgImg(allImagesList[newImageNum - 1], {fadeInSpeed: 400, center: true, centerX: true});
-                    
-                    galleryContainer.fadeIn(400);
+                    $('.galleri-carousel').npFullBgImg(allImagesList[newImageNum - 1], imgOptions);
                 }
             });
         }
-        function shift_gallery(direction, arrowkeys) {
-            if (arrowkeys != true) {
+        function shift_gallery(direction, arrowkeys, pos) {
+            if (!arrowkeys) {
                 arrowkeys = false;
             };
             var currentGallery = $('.active-gallery');
@@ -134,7 +146,11 @@
                 });
                 $(nextGallery).addClass('active-gallery');
                 if (arrowkeys) {
-                    load_gallery(nextGallery, 'start');
+                    if (pos == 'end') {
+                        load_gallery(nextGallery, 'end', arrowkeys);
+                    } else {
+                        load_gallery(nextGallery, 'start', arrowkeys);
+                    }
                 } else {
                     load_gallery(nextGallery, 'end');
                 }
@@ -148,7 +164,7 @@
                 shift_gallery('next');
             } else {
                 $(".image-list-ul").html(newImageNum + ' / ' + j);
-                $('.galleri-carousel').npFullBgImg(allImagesList[parseInt(allImages[0])], {fadeInSpeed: 400, center: true, centerX: true});
+                $('.galleri-carousel').npFullBgImg(allImagesList[parseInt(allImages[0])], imgOptions);
             }
             upC = false;
             toggle_content();
@@ -158,10 +174,10 @@
             j = parseInt(allImages[1]);
             newImageNum = parseInt(allImages[0]) - 1;
             if (newImageNum < 1) {
-                shift_gallery('prev');
+                shift_gallery('prev', 'up', 'end');
             } else {
                 $(".image-list-ul").html(newImageNum + ' / ' + j);
-                $('.galleri-carousel').npFullBgImg(allImagesList[newImageNum - 1], {fadeInSpeed: 400, center: true, centerX: true});
+                $('.galleri-carousel').npFullBgImg(allImagesList[newImageNum - 1], imgOptions);
             }
             upC = false;
             toggle_content();
@@ -177,7 +193,7 @@
             content.fadeIn();
             upC = false;
         });
-        $('#portofolio > li').on('click', 'a', function () {
+        $('#portofolio > li a').bind('click', function () {
             $('#portofolio a').removeClass('active-gallery');
             $(this).addClass('active-gallery');
             load_gallery(this, 'start');
@@ -196,9 +212,9 @@
             } else if (e.keyCode == 39) {
                 next_image(); // Right arrow
             } else if (e.keyCode == 38) {
-                shift_gallery('prev', true);
+                shift_gallery('prev', 'up', 'start');
             } else if (e.keyCode == 40) {
-                shift_gallery('next', true);
+                shift_gallery('next', 'down', 'start');
             }
         });
         
@@ -225,6 +241,12 @@
             load_gallery(firstGallery, 'start');
         };
         content.fadeIn(200);
+        
+        // Align content height with the menu
+        var contentHeight = parseInt(content.css('height'));
+        var contentExtra = parseInt(content.css('margin-top')) + parseInt(content.css('margin-bottom')) + parseInt(content.css('padding-top')) + parseInt(content.css('padding-bottom')) + parseInt(content.css('border-top-width')) + parseInt(content.css('border-bottom-width'));
+        var alignedHeight = parseInt(nav.css('height')) - parseInt(content.css('top')) - contentHeight;
+        content.css({height: contentHeight + alignedHeight - contentExtra + 'px'})
     });
     </script>
 </head>
@@ -236,7 +258,7 @@
             <table>
                 <tr>
                     <td colspan="3" class="logo-fill">
-                        <img src="{% THEME_ROOT %}img/minimize.png" id="menuToggle">
+                        <img src="{% THEME_ROOT %}img/minimize.png" id="menuToggle" alt="Minimize" />
                     </td>
                 </tr>
                 <tr>
@@ -269,7 +291,7 @@
         </nav>
 
         <div id="content">
-                <img src="{% THEME_ROOT %}img/close.png" id="contentToggle">
+                <img src="{% THEME_ROOT %}img/close.png" id="contentToggle" alt="Close" />
                 <div class="ajax-content">
                     {% CONTENT %}
                 </div>
@@ -278,8 +300,8 @@
         <div id="slideshow">
             <div id="loading-placeholder"></div>
             <div class="galleri-carousel"></div>
-            <span id="prevBtn" class="arrow previous"><img src="{% THEME_ROOT %}img/arrow-left.png"></span>
-            <span id="nextBtn" class="arrow next"><img src="{% THEME_ROOT %}img/arrow-right.png"></span>
+            <span id="prevBtn" class="arrow previous"><img src="{% THEME_ROOT %}img/arrow-left.png" alt="Previous" /></span>
+            <span id="nextBtn" class="arrow next"><img src="{% THEME_ROOT %}img/arrow-right.png" alt="Next" /></span>
         </div>
         
     </div>
