@@ -161,6 +161,8 @@ nav {
     width:500px; 
     padding:10px;
     z-index:9;
+    font-size:12px;
+    font-family: Arial, Tahoma, sans-serif;
     -webkit-box-shadow: 4px 4px 12px rgba(50, 50, 50, 0.65);
     -moz-box-shadow: 4px 4px 12px rgba(50, 50, 50, 0.65);
     box-shadow: 4px 4px 12px rgba(50, 50, 50, 0.65);
@@ -245,7 +247,7 @@ span.inactive {
     z-index:100;
     }
     .slideshow-loading div {
-        width:120px;
+        width:36px;
         height:35px;
         line-height:30px;
         background:#fff;
@@ -253,6 +255,9 @@ span.inactive {
         -webkit-box-shadow: 4px 4px 10px rgba(50, 50, 50, 0.65);
         -moz-box-shadow: 4px 4px 10px rgba(50, 50, 50, 0.65);
         box-shadow: 4px 4px 10px rgba(50, 50, 50, 0.65);
+        -webkit-border-radius: 35px;
+        -moz-border-radius: 35px;
+        border-radius: 35px;
         }
         .slideshow-loading div img {
             height:16px;

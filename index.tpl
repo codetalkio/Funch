@@ -28,7 +28,7 @@
         var galleryContainer = $(".galleri-carousel");
         var galleryNotSet = true;
         var loadingContainer = $("#slideshow #loading-placeholder");
-        var loadingImg = '<div class="slideshow-loading"><div>Loading <img src="<?php print RESOURCES_ROOT; ?>img/load.gif" alt="..." /></div></div>';
+        var loadingImg = '<div class="slideshow-loading"><div><img src="<?php print RESOURCES_ROOT; ?>img/load.gif" alt="..." /></div></div>';
         var allImagesList = new Array;
         
         loadingContainer.fadeOut(0);

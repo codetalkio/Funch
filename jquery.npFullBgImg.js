@@ -9,11 +9,11 @@ time() + $offset) . " GMT";
 header($ExpStr);
 ?>
 /* JS
-* Copyright 2009 noponies.
-* Version 0.1 Beta - Intial Release to the wild - comments, yes please!
-*
-* Example: jQuery('#imgContainer').npFullBgImg("files/layout2011/gfx/sideChooser.png", {fadeInSpeed: 0, center: false, centerX: true});
-*/
+ * Copyright 2009 noponies.
+ * Version 0.1 Beta - Intial Release to the wild - comments, yes please!
+ *
+ * Example: jQuery('#imgContainer').npFullBgImg("files/layout2011/gfx/sideChooser.png", {fadeInSpeed: 0, center: false, centerX: true});
+ */
 (function($){
 
 	var img_prop;
@@ -46,6 +46,7 @@ header($ExpStr);
                     opts.beforeLoad.call(this);
                 }
             }
+            
 	        $(img).load(function () {
 	        	//this is a hack to stop a flash of the image sometimes
   				$(img).fadeOut(10, 0);
@@ -71,18 +72,16 @@ header($ExpStr);
 		          	if( typeof opts.callback == 'function' ){
 						opts.callback.call(this, targetContainer, options);
 					}
-
-	            });
-                if (opts.afterLoad) {
-                    if(typeof opts.afterLoad === 'function') {
-                        opts.afterLoad.call(this);
+                    if (opts.afterLoad) {
+                        if(typeof opts.afterLoad === 'function') {
+                            opts.afterLoad.call(this);
+                        }
                     }
-                }
+	            });
 	        }).error(function () {
-	            // got an error
 	            //console.log('image not loaded');
 	        }).attr('src', imgPath);
-	        //}).attr('src', imgPath + '?random=' + (new Date()).getTime());
+	        
 	    	}
 		});
 	
