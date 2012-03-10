@@ -28,7 +28,8 @@ header($ExpStr);
    				 center: false,
 				 centerX: false,
                  beforeLoad: false,
-                 afterLoad: false
+                 afterLoad: false,
+                 cache: true
 			};
 			var opts = $.extend(defaults, options);
 			var targetContainer = $(this); 
@@ -46,7 +47,9 @@ header($ExpStr);
                     opts.beforeLoad.call(this);
                 }
             }
-            
+            $.ajaxSetup ({
+                cache: opts.cache
+            });
 	        $(img).load(function () {
 	        	//this is a hack to stop a flash of the image sometimes
   				$(img).fadeOut(10, 0);
