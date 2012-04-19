@@ -282,7 +282,7 @@
                 <ul id="portofolio">
                     <?php
                     $portfolio = new Portfolio;
-                    foreach ($portfolio->get() as $gallery) {
+                    foreach ($portfolio->get(null, 'ORDER BY weight ASC') as $gallery) {
                         print '<li><a class="gallery-anchor" href="' . $gallery['id'] . '">' . $gallery['name'] . '</a></li>';
                     }
                     ?>
