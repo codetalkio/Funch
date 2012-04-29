@@ -92,10 +92,10 @@
                         j = i;
                         images.push(pathPrefix + item.img_file);
                     });
-                    if (j == false && arrowkeys == 'up' || j == false && pos == 'end') {
+                    if (j === false && arrowkeys == 'up' || j === false && pos == 'end') {
                         shift_gallery('prev', arrowkeys, pos);
                         return;
-                    } else if (j == false) {
+                    } else if (j === false) {
                         shift_gallery('next', arrowkeys, pos);
                         return;
                     }
