@@ -85,17 +85,17 @@
                     var goList = "";
                     var imageList = "";
                     var pathPrefix = "<?php print RESOURCES_ROOT . 'uploads' . DS; ?>";
-                    var j = 0;
+                    var j = false;
                     var images = new Array;
                     $.each(json, function(i, item) {
                         var goId = 'gallery-image-' + item.id;
                         j = i;
                         images.push(pathPrefix + item.img_file);
                     });
-                    if (j == 0 && arrowkeys == 'up' || j == 0 && pos == 'end') {
+                    if (j == false && arrowkeys == 'up' || j == false && pos == 'end') {
                         shift_gallery('prev', arrowkeys, pos);
                         return;
-                    } else if (j == 0) {
+                    } else if (j == false) {
                         shift_gallery('next', arrowkeys, pos);
                         return;
                     }
