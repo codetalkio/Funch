@@ -184,6 +184,11 @@
             } else {
                 $(".image-list-ul").html(newImageNum + ' / ' + j);
                 $('.galleri-carousel').npFullBgImg(allImagesList[parseInt(allImages[0])], imgOptions);
+                for (var i=0; i < imageInfoList.length; i++) {
+                    if (allImagesList[parseInt(allImages[0])] == imageInfoList[i].imageSrc) {
+                        $(document).trigger('CHANGE_IMAGE_INFO', imageInfoList[i]);
+                    }
+                };
             }
             upC = false;
             toggle_content();
@@ -197,6 +202,11 @@
             } else {
                 $(".image-list-ul").html(newImageNum + ' / ' + j);
                 $('.galleri-carousel').npFullBgImg(allImagesList[newImageNum - 1], imgOptions);
+                for (var i=0; i < imageInfoList.length; i++) {
+                    if (allImagesList[newImageNum - 1] == imageInfoList[i].imageSrc) {
+                        $(document).trigger('CHANGE_IMAGE_INFO', imageInfoList[i]);
+                    }
+                };
             }
             upC = false;
             toggle_content();
