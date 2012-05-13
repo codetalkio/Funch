@@ -15,21 +15,25 @@
     !window.jQuery && document.write('<script src="{% JS_ROOT %}jquery-1.7.1.min.js"><\/script>');
     //{% AJAX %}
     $(document).ready(function () {
-        var upM = false;
-        var upC = false;
-        var nextBtn = $('#nextBtn');
-        var prevBtn = $('#prevBtn');
-        var nav = $('nav');
-        var navTable = $('nav table');
-        var menu = $('#menu');
-        var menuToggleImg = $('#menuToggle');
-        var content = $('#content');
-        var galleryContent = $("#galleri-carousel");
-        var galleryContainer = $(".galleri-carousel");
-        var galleryNotSet = true;
-        var loadingContainer = $("#slideshow #loading-placeholder");
-        var loadingImg = '<div class="slideshow-loading"><div><img src="<?php print RESOURCES_ROOT; ?>img/load.gif" alt="..." /></div></div>';
-        var allImagesList = new Array;
+        var upM = false,
+            upC = false,
+            imgIsLoading = false,
+            nextBtn = $('#nextBtn'),
+            prevBtn = $('#prevBtn'),
+            imageInfoBackground = $('#image-info-background'),
+            imageInfo = $('#image-info'),
+            nav = $('nav'),
+            navTable = $('nav table'),
+            menu = $('#menu'),
+            menuToggleImg = $('#menuToggle'),
+            content = $('#content'),
+            galleryContent = $("#galleri-carousel"),
+            galleryContainer = $(".galleri-carousel"),
+            galleryNotSet = true,
+            loadingContainer = $("#slideshow #loading-placeholder"),
+            loadingImg = '<div class="slideshow-loading"><div><img src="<?php print RESOURCES_ROOT; ?>img/load.gif" alt="..." /></div></div>',
+            allImagesList = new Array,
+            imageInfoList = new Array;
         
         loadingContainer.fadeOut(0);
         loadingContainer.html(loadingImg);
@@ -39,10 +43,10 @@
             center: true,
             centerX: true,
             beforeLoad: function() {
-                loadingContainer.fadeIn(200);
+                $(document).trigger('IMAGE_IS_LOADING');
             },
             afterLoad: function() {
-                loadingContainer.fadeOut(200);
+                $(document).trigger('IMAGE_IS_DONE_LOADING');
             }
         }
         
@@ -87,10 +91,18 @@
                     var pathPrefix = "<?php print RESOURCES_ROOT . 'uploads' . DS; ?>";
                     var j = false;
                     var images = new Array;
+                    var imagesInfo = new Array;
                     $.each(json, function(i, item) {
                         var goId = 'gallery-image-' + item.id;
                         j = i;
-                        images.push(pathPrefix + item.img_file);
+                        var imageSrc = pathPrefix + item.img_file;
+                        images.push(imageSrc);
+                        imagesInfo.push({
+                            id: item.id,
+                            imageSrc: imageSrc,
+                            name: item.name,
+                            description: item.description
+                        });
                     });
                     if (j === false && arrowkeys == 'up' || j === false && pos == 'end') {
                         shift_gallery('prev', arrowkeys, pos);
@@ -100,6 +112,7 @@
                         return;
                     }
                     allImagesList = images;
+                    imageInfoList = imagesInfo;
                     j = j + 1;
                     if (pos == 'end') {
                         var newImageNum = j;
@@ -109,6 +122,12 @@
                     $(".image-list-ul").remove();
                     $(elem).parent().append('<span class="image-list-ul">' + newImageNum + ' / ' + j + '</span>');
                     // Load gallery content
+                    var info = {};
+                    for (var i=0; i < imageInfoList.length; i++) {
+                        if (allImagesList[newImageNum - 1] == imageInfoList[i].imageSrc) {
+                            $(document).trigger('CHANGE_IMAGE_INFO', imageInfoList[i]);
+                        }
+                    };
                     $('.galleri-carousel').npFullBgImg(allImagesList[newImageNum - 1], imgOptions);
                 }
             });
@@ -182,7 +201,7 @@
             upC = false;
             toggle_content();
         }
-        
+
         $('#menuToggle').click(function () {
             toggle_menu();
         });
@@ -222,16 +241,40 @@
             var windowHeight = $(window).height();
             var windowWidth = $(window).width();
             var windowX = windowWidth / 2;
+            // Right side
             if (e.pageX < windowX || e.pageX > (windowWidth - 20) || e.pageY < 20 || e.pageY > (windowHeight - 20)) {
                 nextBtn.fadeOut(100);
             } else {
                 nextBtn.fadeIn(100);
             }
+            // Left side
             if (e.pageX > windowX || e.pageX < 20 || e.pageY < 20 || e.pageY > (windowHeight - 20)) {
                 prevBtn.fadeOut(100);
             } else {
                 prevBtn.fadeIn(100);
             }
+            // Bottom
+            if (e.pageY > (windowHeight - 100)) {
+                imageInfoBackground.fadeIn(200);
+                imageInfo.fadeIn(200);
+            } else {
+                imageInfoBackground.fadeOut(200);
+                imageInfo.fadeOut(200);
+            }
+        });
+        
+        $(document).on('IMAGE_IS_LOADING', function() {
+            loadingContainer.fadeIn(200);
+            imgIsLoading = true;
+        });
+        
+        $(document).on('IMAGE_IS_DONE_LOADING', function() {
+            loadingContainer.fadeOut(200);
+            imgIsLoading = false;
+        });
+        
+        $(document).on('CHANGE_IMAGE_INFO', function(e, imageData) {
+            imageInfo.html(imageData.name);
         });
         
         if (galleryNotSet) {
@@ -302,6 +345,8 @@
             <div class="galleri-carousel"></div>
             <span id="prevBtn" class="arrow previous"><img src="{% THEME_ROOT %}img/arrow-left.png" alt="Previous" /></span>
             <span id="nextBtn" class="arrow next"><img src="{% THEME_ROOT %}img/arrow-right.png" alt="Next" /></span>
+            <div id="image-info-background"> </div>
+            <div id="image-info"> </div>
         </div>
         
     </div>

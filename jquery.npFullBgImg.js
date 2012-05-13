@@ -15,7 +15,7 @@ header($ExpStr);
  * Example: jQuery('#imgContainer').npFullBgImg("files/layout2011/gfx/sideChooser.png", {fadeInSpeed: 0, center: false, centerX: true});
  */
 (function($){
-
+    
 	var img_prop;
 	var imageArray = [];
 	var defaults = {};
@@ -33,13 +33,18 @@ header($ExpStr);
 			};
 			var opts = $.extend(defaults, options);
 			var targetContainer = $(this); 
+            
+            for (var i=0; i < imageArray.length; i++) {
+                $(imageArray[i]).unbind('load');
+            };
+            
 			//create image
 			var img  = new Image();
 			//add to array
  	 		imageArray.unshift(img);
  	 		
  	 		if(firstLoad === true) {
- 	 			$(targetContainer).fadeTo(10, 0)
+ 	 			$(targetContainer).fadeTo(10, 0);
  	 		}
             
             if (opts.beforeLoad) {
@@ -50,41 +55,43 @@ header($ExpStr);
             $.ajaxSetup ({
                 cache: opts.cache
             });
-	        $(img).load(function () {
-	        	//this is a hack to stop a flash of the image sometimes
-  				$(img).fadeOut(10, 0);
-	         	//$(img).css({display: 'none', left:0, top: 0, position: 'fixed', 'z-index': -100});
-	         	$(img).css({display: 'none', left:0, top: 0, position: 'fixed', 'z-index': 0});
-	            //add image to container
-	            $(targetContainer).append(img);
-	            //resize image
+	        
+            $(img).load(function () {
+            	//this is a hack to stop a flash of the image sometimes
+            	$(img).fadeOut(10, 0);
+             	//$(img).css({display: 'none', left:0, top: 0, position: 'fixed', 'z-index': -100});
+             	$(img).css({display: 'none', left:0, top: 0, position: 'fixed', 'z-index': 0});
+                //add image to container
+                $(targetContainer).append(img);
+                //resize image
 
-				resizeImg($(window).width(), $(window).height(), $(img).width(), $(img).height());
+            	resizeImg($(window).width(), $(window).height(), $(img).width(), $(img).height());
                 
-				if(firstLoad === true) {
- 	 				$(targetContainer).fadeTo(10, 1)
- 	 				firstLoad = false;
- 	 			}
+            	if(firstLoad === true) {
+            		$(targetContainer).fadeTo(10, 1)
+            		firstLoad = false;
+            	}
 					            
-	            $(img).fadeIn(defaults.fadeInSpeed, function () {
-		            if(imageArray.length > 1) {
-		            	imageArray.pop();
-		            	$(targetContainer).children().eq(0).remove();   	
-		            }
+                $(img).fadeIn(defaults.fadeInSpeed, function () {
+                    if(imageArray.length > 1) {
+                    	imageArray.pop();
+                    	$(targetContainer).children().eq(0).remove();   	
+                    }
 		            
-		          	if( typeof opts.callback == 'function' ){
-						opts.callback.call(this, targetContainer, options);
-					}
+                  	if( typeof opts.callback == 'function' ){
+            			opts.callback.call(this, targetContainer, options);
+            		}
                     if (opts.afterLoad) {
                         if(typeof opts.afterLoad === 'function') {
                             opts.afterLoad.call(this);
                         }
                     }
-	            });
-	        }).error(function () {
-	            //console.log('image not loaded');
-	        }).attr('src', imgPath);
+                });
+            }).error(function () {
+                //console.log('image not loaded');
+            }).attr('src', imgPath);
 	        
+            
 	    	}
 		});
 	

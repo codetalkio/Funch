@@ -3,7 +3,7 @@ html {
     height: 100%;
 }
 body {
-    background: url("{% THEME %}/img/bit_texture.png");
+    background: #fff;
     margin:0 auto; 
     padding:0px; 
     font: 13px/18px 'Lucida Grande', Tahoma, Verdana, Sans-Serif;
@@ -293,4 +293,31 @@ span.inactive {
     }
     #slideshow .arrow img {
         width:65px;
+    }
+    #image-info-background {
+        display:none;
+        width: 50%;
+        height: 40px;
+        position: fixed;
+        bottom: 0;
+        left: 50%;
+        margin-left: -25%;
+        background: black;
+        opacity: 0.7;
+    }
+    #image-info {
+        display:none;
+        width: 48%;
+        height: 40px;
+        position: fixed;
+        bottom: 0;
+        left: 50%;
+        margin-left: -24%;
+        
+        color: white;
+        line-height: 40px;
+        font-size: 19px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        padding: 0 31px 0 33px;
     }
