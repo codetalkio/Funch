@@ -27,6 +27,7 @@
             menu = $('#menu'),
             menuToggleImg = $('#menuToggle'),
             content = $('#content'),
+            $navigation = $("#navigation-section"),
             galleryContent = $("#galleri-carousel"),
             galleryContainer = $(".galleri-carousel"),
             galleryNotSet = true,
@@ -52,17 +53,11 @@
         
         function toggle_menu() {
             if(upM) {
-                navTable.removeClass('box-shadow');
-                menu.slideDown(200, function() {
-                    nav.addClass('box-shadow');
-                });
+                menu.slideDown(200);
                 menuToggleImg.attr('src', '{% THEME_ROOT %}img/minimize.png');
                 upM = false;
             } else {
-                nav.removeClass('box-shadow');
-                menu.slideUp(200, function() {
-                    navTable.addClass('box-shadow');
-                });
+                menu.slideUp(200);
                 menuToggleImg.attr('src', '{% THEME_ROOT %}img/expand.png');
                 upM = true;
             }
@@ -295,11 +290,15 @@
         };
         content.fadeIn(200);
         
-        // Align content height with the menu
-        var contentHeight = parseInt(content.css('height'));
-        var contentExtra = parseInt(content.css('margin-top')) + parseInt(content.css('margin-bottom')) + parseInt(content.css('padding-top')) + parseInt(content.css('padding-bottom')) + parseInt(content.css('border-top-width')) + parseInt(content.css('border-bottom-width'));
-        var alignedHeight = parseInt(nav.css('height')) - parseInt(content.css('top')) - contentHeight;
-        content.css({height: contentHeight + alignedHeight - contentExtra + 'px'})
+        var btnPos = String(($(window).height() / 2) - (47 / 2)) + 'px';
+        nextBtn.css({top: btnPos});
+        prevBtn.css({top: btnPos});
+        
+        $(window).resize(function() {
+            var btnPos = String(($(window).height() / 2) - (47 / 2)) + 'px';
+            nextBtn.css({top: btnPos});
+            prevBtn.css({top: btnPos});
+        });
     });
     </script>
 </head>
@@ -307,48 +306,46 @@
 <body>
     <div id="container">
         
-        <nav class="box-shadow">
+        <nav id="navigation-section">
             <table>
                 <tr>
-                    <td colspan="3" class="logo-fill">
+                    <td class="menu-top">
                         <img src="{% THEME_ROOT %}img/minimize.png" id="menuToggle" alt="Minimize" />
                     </td>
                 </tr>
                 <tr>
-                    <td class="logo-fill fill-middle"> </td>
-                    <td id="logo"></td>
-                    <td class="logo-fill fill-middle"> </td>
+                    <td class="menu-middle">
+                        <div id="menu">
+                            <ul class="ajax-menu">
+                            <?php
+                                foreach (Pages::getMenu() as $menu) {
+                                    print '<li><a ' . $menu['active'] . ' href="' . $menu['href'] . '">' . $menu['name'] . '</a>&nbsp;&nbsp;</li>';
+                                }
+                            ?>
+                            </ul>
+
+                            <ul id="portofolio">
+                                <?php
+                                $portfolio = new Portfolio;
+                                foreach ($portfolio->get(null, 'ORDER BY weight ASC') as $gallery) {
+                                    print '<li><a class="gallery-anchor" href="' . $gallery['id'] . '">' . $gallery['name'] . '</a>&nbsp;&nbsp;</li>';
+                                }
+                                ?>
+                            </ul>
+                        </div>
+                    </td>
                 </tr>
                 <tr>
-                    <td colspan="3" class="logo-fill"></td>
+                    <td class="menu-bottom"></td>
                 </tr>
             </table>
-            <div id="menu">
-                <ul class="ajax-menu">
-                <?php
-                    foreach (Pages::getMenu() as $menu) {
-                        print '<li><a ' . $menu['active'] . ' href="' . $menu['href'] . '">' . $menu['name'] . '</a></li>';
-                    }
-                ?>
-                </ul>
-
-                <ul id="portofolio">
-                    <?php
-                    $portfolio = new Portfolio;
-                    foreach ($portfolio->get(null, 'ORDER BY weight ASC') as $gallery) {
-                        print '<li><a class="gallery-anchor" href="' . $gallery['id'] . '">' . $gallery['name'] . '</a></li>';
-                    }
-                    ?>
-                </ul>
+            <div id="content">
+                    <img src="{% THEME_ROOT %}img/minimize.png" id="contentToggle" alt="Close" />
+                    <div class="ajax-content">
+                        {% CONTENT %}
+                    </div>
             </div>
         </nav>
-
-        <div id="content">
-                <img src="{% THEME_ROOT %}img/close.png" id="contentToggle" alt="Close" />
-                <div class="ajax-content">
-                    {% CONTENT %}
-                </div>
-        </div>
 
         <div id="slideshow">
             <div id="loading-placeholder"></div>

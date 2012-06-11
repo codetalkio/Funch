@@ -1,4 +1,20 @@
 /* Page-level */
+@font-face {
+    font-family: chronoLight;
+    src: url("{% THEME %}/fonts/Chrono/Chrono-Light.eot"); /* EOT file for IE */
+}
+@font-face {
+    font-family: chronoLight;
+    src: url("{% THEME %}/fonts/Chrono/Chrono-Light.otf");
+}
+@font-face {
+    font-family: chronoRegular;
+    src: url("{% THEME %}/fonts/Chrono/Chrono-Regular.eot"); /* EOT file for IE */
+}
+@font-face {
+    font-family: chronoRegular;
+    src: url("{% THEME %}/fonts/Chrono/Chrono-Regular.otf");
+}
 html {
     height: 100%;
 }
@@ -6,17 +22,17 @@ body {
     background: #fff;
     margin:0 auto; 
     padding:0px; 
-    font: 13px/18px 'Lucida Grande', Tahoma, Verdana, Sans-Serif;
+    font: 11px/18px 'chronoRegular', 'Lucida Grande', Tahoma, Verdana, Sans-Serif;
     height:100%;
 }
 h1, h2, h3 {
     font-family:nevisBold;
     font-weight:lighter;
 }
-p { font-size: 13px; }
-a:link { color:#2d81d5; text-decoration: none; }
-a:visited { color:#2d81d5; } 
-a:hover{ color:#ff6a57;text-decoration: underline; } 
+p { font-size: 11px; }
+a:link { color:#4E4E4E; text-decoration: none; }
+a:visited { color:#4E4E4E; } 
+a:hover{ color:#ff6a57; text-decoration: underline; } 
 a:active { color:#ff6a57; font-weight:bold; }
 
 div{ background:none; }
@@ -43,7 +59,7 @@ header, nav, section, article, hgroup, footer, address { display:block; }
     clear:both;
 }
 #menuToggle {
-    margin:5px 5px 0 0;
+    margin:5px 11px 0 0;
 }
 #contentToggle {
     margin:-3px -2px 0 0;
@@ -58,7 +74,7 @@ nav {
     top:0px;
     left:60px;
     background:none;
-    width:130px;
+    width:114px;
     margin:0;
     clear:both;
     text-align:left;
@@ -69,39 +85,26 @@ nav {
     nav table {
         border:0px;
         border-spacing:0;
+        width: 114px;
     }
-    nav .logo-fill {
-        background:#fff;
-        height:30px;
-        text-align:right;
-        vertical-align:top;
+    nav .menu-top {
+        background: url("{% THEME %}/img/menu-top.png") no-repeat;
+        height: 99px;
+        text-align: right;
+        vertical-align: top;
+        width: 114px;
     }
-    nav .fill-middle {
-        width:17px;
+    nav .menu-middle {
+        background: url("{% THEME %}/img/menu-fill.png") no-repeat repeat;
     }
-    nav #logo {
-        background: url("{% THEME %}/img/logo.png") no-repeat;
-        background-size:100px 70px;
-        height:68px;
-        width:119px;
+    nav .menu-bottom {
+        background: url("{% THEME %}/img/menu-bot.png") no-repeat;
+        width:114px;
+        height: 5px;
     }
     nav #menu {
-        background:#fff;
-        padding:5px 10px 10px 10px;
+        padding:5px 10px 10px 0px;
     }
-    nav a {
-        text-decoration: none;
-        font-size: 12px;
-        font-family: Arial, Tahoma, sans-serif;
-        font-weight:lighter;
-    }
-    nav a:link {color:#a0a0a0;}
-    nav a:visited {color:#a0a0a0;}
-    nav a:hover {color:#000; text-decoration: none; font-weight:bold;}
-    nav a:active {color:#000; font-weight:bold;}
-    nav a.active-link {color:#000; font-weight:bold;}
-    nav a.active-gallery {color:#000; font-weight:bold;}
-    nav a.active-gallery-image {color:#000; font-weight:bold;}
     nav ul { 
         white-space:nowrap;
         list-style-type:none;
@@ -109,13 +112,13 @@ nav {
         padding:10px 10px 5px 10px; 
         } 
         nav ul li {
-            height:20px;
+            height:17px;
         }
         #portofolio > li { 
             clear:both;
             height:auto;
-            min-height:20px;
-            line-height:20px;
+            min-height:17px;
+            line-height:17px;
             }
             #portofolio > li ul {
                 list-style-type:none;
@@ -132,16 +135,30 @@ nav {
     nav #menu #portofolio {
         padding:30px 10px 15px 10px;
         text-decoration: none;
-        font-size: 12px;
-        font-family: Arial, Tahoma, sans-serif;
+        font-size: 11px;
+        font-family: 'chronoRegular', Arial, Tahoma, sans-serif;
         font-weight:lighter;
     }
     nav #menu #portofolio ul li {
         height:auto;
     }
     nav #menu .image-list-ul {
-        padding-left: 10px;
+        padding-left: 0px;
     }
+    nav a {
+        text-decoration: none;
+        font-size: 10px;
+        font-family: 'chronoRegular', Arial, Tahoma, sans-serif;
+        font-weight:lighter;
+    }
+    nav a:link {color:#4E4E4E;}
+    nav a:visited {color:#4E4E4E;}
+    nav a:hover {color:#000; text-decoration: none; font-weight:bold;}
+    nav a:active {color:#000; font-weight:bold;}
+    nav a.active-link {color:#000; font-weight:bold;}
+    nav a.active-gallery {color:#000; font-weight:bold;}
+    nav a.active-gallery-image {color:#000; font-weight:bold;}
+    
 
 /* content */
 .ajax-loading {
@@ -154,15 +171,16 @@ nav {
 #content {
     display:none;
     position:absolute;
-    top:100px;
-    left:210px;
-    background:#fff;
-    min-height: 150px;
-    width:500px; 
+    bottom:-274px;
+    left:2px;
+    background: url("{% THEME %}/img/transparent-fill.png");
+    height: 234px;
+    width:265px; 
     padding:10px;
     z-index:9;
     font-size:12px;
-    font-family: Arial, Tahoma, sans-serif;
+    font-family: 'chronoRegular', 'Lucida Grande', Tahoma, Verdana, Sans-Serif;
+    line-height: 14px;
     -webkit-box-shadow: 4px 4px 12px rgba(50, 50, 50, 0.65);
     -moz-box-shadow: 4px 4px 12px rgba(50, 50, 50, 0.65);
     box-shadow: 4px 4px 12px rgba(50, 50, 50, 0.65);
@@ -173,7 +191,7 @@ nav {
         font-weight:bold;
     }
     #content .ajax-content {
-        overflow:scroll;
+        overflow-y:auto;
         max-height: 225px;
     }
 
@@ -187,13 +205,13 @@ footer {
     width:600px;
     margin-left:-300px;
     text-align:center;
-    font: 10px "lucida grande";
+    font: 10px 'chronoRegular', 'Lucida Grande', Tahoma, Verdana, Sans-Serif;
     color: #505050;
     padding-bottom:10px;
     }
     footer a {
         text-decoration:none;
-        font: 10px "lucida grande";
+        font: 10px 'chronoRegular', 'Lucida Grande', Tahoma, Verdana, Sans-Serif;
         color: #505050;
     }
     footer a:link {color:#505050;}
@@ -204,10 +222,10 @@ footer {
 
 /* Pagination */
 .paginate {
-    font: 12px 'Lucida Grande', Tahoma, Verdana, Sans-Serif;
+    font: 12px 'chronoRegular', 'Lucida Grande', Tahoma, Verdana, Sans-Serif;
 }
 a.paginate {
-    font: 12px 'Lucida Grande', Tahoma, Verdana, Sans-Serif;
+    font: 12px 'chronoRegular', 'Lucida Grande', Tahoma, Verdana, Sans-Serif;
     border-left: 1px solid #DEDEDE;
     padding: 1px 6px;
     color: #005fad;
@@ -218,7 +236,7 @@ a.paginate:last-child {
 
 a.current {
     border-left: 1px solid #DEDEDE;
-    font: 12px 'Lucida Grande', Tahoma, Verdana, Sans-Serif;
+    font: 12px 'chronoRegular', 'Lucida Grande', Tahoma, Verdana, Sans-Serif;
     padding: 2px 6px 2px 6px;
     cursor: default;
     color: #000;
@@ -230,7 +248,7 @@ a.current:last-child {
 }
 
 span.inactive {
-    font: 12px 'Lucida Grande', Tahoma, Verdana, Sans-Serif;
+    font: 12px 'chronoRegular', 'Lucida Grande', Tahoma, Verdana, Sans-Serif;
     padding: 1px 6px;
     color: #005fad;
     cursor: default;
@@ -261,7 +279,7 @@ span.inactive {
         }
         .slideshow-loading div img {
             height:16px;
-            margin-bottom: -4px;
+            margin-bottom: -8px;
         }
     
 .galleri-carousel {
@@ -284,40 +302,37 @@ span.inactive {
     #slideshow .arrow.previous {
         position:absolute;
         top:450px;
-        left:55px;
+        left:10px;
     }
     #slideshow .arrow.next {
         position:absolute;
         top:450px;
-        right:55px;
+        right:10px;
     }
     #slideshow .arrow img {
-        width:65px;
+        width:24px;
     }
     #image-info-background {
         display:none;
-        width: 50%;
-        height: 40px;
+        width: 100%;
+        height: 45px;
         position: fixed;
         bottom: 0;
-        left: 50%;
-        margin-left: -25%;
-        background: black;
-        opacity: 0.7;
+        left: 0;
+        margin-left: 0;
+        background: url("{% THEME %}/img/transparent-fill.png");
     }
     #image-info {
         display:none;
-        width: 48%;
-        height: 40px;
+        height: 45px;
         position: fixed;
         bottom: 0;
-        left: 50%;
-        margin-left: -24%;
+        left: 0;
+        margin-left: 20px;
         
-        color: white;
-        line-height: 40px;
-        font-size: 19px;
+        color: #4E4E4E;
+        line-height: 27px;
+        font-size: 12px;
         overflow: hidden;
-        text-overflow: ellipsis;
         padding: 0 31px 0 33px;
     }
