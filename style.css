@@ -78,7 +78,7 @@ nav {
     margin:0;
     clear:both;
     text-align:left;
-    min-height: 320px;
+    min-height: 200px;
     line-height: 35px;
     z-index:10;
     }
@@ -172,8 +172,8 @@ nav {
     display:none;
     position:absolute;
     bottom:-274px;
-    left:2px;
-    background: url("{% THEME %}/img/transparent-fill.png");
+    left:-1px;
+    background: url("{% THEME %}/img/content-background.png");
     height: 234px;
     width:265px; 
     padding:10px;
@@ -190,6 +190,7 @@ nav {
     #content .ajax-content {
         overflow-y:auto;
         max-height: 225px;
+        padding-left: 12px;
     }
 
 /* footer */
