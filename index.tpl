@@ -11,6 +11,7 @@
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript" charset="utf-8"></script>
     <script src="{% JS_ROOT %}head.load.min.js" type="text/javascript" charset="utf-8"></script>
     <script src="{% THEME_ROOT %}jquery.npFullBgImg.js" type="text/javascript" charset="utf-8"></script>
+    <script src="{% THEME_ROOT %}jquery.touchswipe.js" type="text/javascript" charset="utf-8"></script>
     <script>
     !window.jQuery && document.write('<script src="{% JS_ROOT %}jquery-1.7.1.min.js"><\/script>');
     //{% AJAX %}
@@ -207,7 +208,7 @@
             toggle_content();
         }
 
-        $('#menuToggle').click(function () {
+        $('.menu-top').click(function () {
             toggle_menu();
         });
         $('#contentToggle').click(function () {
@@ -259,7 +260,7 @@
                 prevBtn.fadeIn(100);
             }
             // Bottom
-            if (e.pageY > (windowHeight - 100)) {
+            if (e.pageY > (windowHeight - (windowHeight / 2) + 50)) {
                 imageInfoBackground.fadeIn(200);
                 imageInfo.fadeIn(200);
             } else {
@@ -280,6 +281,24 @@
         
         $(document).on('CHANGE_IMAGE_INFO', function(e, imageData) {
             imageInfo.html(imageData.name);
+        });
+        
+        $(document).touchwipe({
+             wipeLeft: function() {
+                 next_image();
+             },
+             wipeRight: function() {
+                 prev_image();
+             },
+             wipeUp: function() {
+                 shift_gallery('prev', 'up', 'start');
+             },
+             wipeDown: function() {
+                 shift_gallery('next', 'down', 'start');
+             },
+             min_move_x: 50,
+             min_move_y: 50,
+             preventDefaultEvents: true
         });
         
         if (galleryNotSet) {
@@ -309,7 +328,7 @@
         <nav id="navigation-section">
             <table>
                 <tr>
-                    <td class="menu-top">
+                    <td class="menu-top" title="Kristine Funch">
                         <img src="{% THEME_ROOT %}img/minimize.png" id="menuToggle" alt="Minimize" />
                     </td>
                 </tr>
@@ -327,7 +346,7 @@
                             <ul id="portofolio">
                                 <?php
                                 $portfolio = new Portfolio;
-                                foreach ($portfolio->get(null, 'ORDER BY weight ASC') as $gallery) {
+                                foreach ($portfolio->get(null, 'ORDER BY weight DESC') as $gallery) {
                                     print '<li><a class="gallery-anchor" href="' . $gallery['id'] . '">' . $gallery['name'] . '</a>&nbsp;&nbsp;</li>';
                                 }
                                 ?>

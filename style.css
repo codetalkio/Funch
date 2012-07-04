@@ -15,6 +15,15 @@
     font-family: chronoRegular;
     src: url("{% THEME %}/fonts/Chrono/Chrono-Regular.otf");
 }
+@font-face {
+    font-family: chronoBold;
+    src: url("{% THEME %}/fonts/Chrono/Chrono-Bold.eot"); /* EOT file for IE */
+}
+@font-face {
+    font-family: chronoBold;
+    src: url("{% THEME %}/fonts/Chrono/Chrono-Bold.otf");
+}
+
 html {
     height: 100%;
 }
@@ -26,14 +35,13 @@ body {
     height:100%;
 }
 h1, h2, h3 {
-    font-family:nevisBold;
-    font-weight:lighter;
+    font-family: 'chronoBold', 'Lucida Grande', Tahoma, Verdana, Sans-Serif;
 }
 p { font-size: 11px; }
 a:link { color:#4E4E4E; text-decoration: none; }
 a:visited { color:#4E4E4E; } 
 a:hover{ color:#ff6a57; text-decoration: underline; } 
-a:active { color:#ff6a57; font-weight:bold; }
+a:active { color:#ff6a57; font-family: 'chronoBold', 'Lucida Grande', Tahoma, Verdana, Sans-Serif; }
 
 div{ background:none; }
 /* Note: Make HTML 5 elements block-level for consistent styling */
@@ -54,7 +62,7 @@ header, nav, section, article, hgroup, footer, address { display:block; }
 /* navigation menu */
 #menuToggle, #contentToggle {
     float:right;
-    height:13px;
+    height:10px;
     cursor:pointer;
     clear:both;
 }
@@ -62,7 +70,7 @@ header, nav, section, article, hgroup, footer, address { display:block; }
     margin:5px 11px 0 0;
 }
 #contentToggle {
-    margin:-3px -2px 0 0;
+    margin:-1px -1px 0 0;
 }
 .box-shadow {
     -webkit-box-shadow: 2px 2px 10px rgba(50, 50, 50, 0.65);
@@ -85,7 +93,8 @@ nav {
     nav table {
         border:0px;
         border-spacing:0;
-        width: 114px;
+        width: 121px;
+        border-collapse: collapse;
     }
     nav .menu-top {
         background: url("{% THEME %}/img/menu-top.png") no-repeat;
@@ -93,6 +102,7 @@ nav {
         text-align: right;
         vertical-align: top;
         width: 114px;
+        cursor: pointer;
     }
     nav .menu-middle {
         background: url("{% THEME %}/img/menu-fill.png") no-repeat repeat;
@@ -102,8 +112,14 @@ nav {
         width:114px;
         height: 5px;
     }
+    @media only screen and (max-device-width: 480px) {
+        /* iPhone */
+    }
+    @media only screen and (min-device-width: 768px) and (max-device-width: 1024px) {
+        /* iPad */
+    }
     nav #menu {
-        padding:5px 10px 10px 0px;
+        padding:5px 10px 10px 9px;
     }
     nav ul { 
         white-space:nowrap;
@@ -117,8 +133,8 @@ nav {
         #portofolio > li { 
             clear:both;
             height:auto;
-            min-height:17px;
-            line-height:17px;
+            min-height:16px;
+            line-height:16px;
             }
             #portofolio > li ul {
                 list-style-type:none;
@@ -133,7 +149,7 @@ nav {
             border-right:0px;
         }
     nav #menu #portofolio {
-        padding:30px 10px 15px 10px;
+        padding:17px 10px 8px 10px;
         text-decoration: none;
         font-size: 11px;
         font-family: 'chronoRegular', Arial, Tahoma, sans-serif;
@@ -144,20 +160,22 @@ nav {
     }
     nav #menu .image-list-ul {
         padding-left: 0px;
+        font-size: 10px;
     }
     nav a {
         text-decoration: none;
         font-size: 10px;
         font-family: 'chronoRegular', Arial, Tahoma, sans-serif;
         font-weight:lighter;
+        text-transform: uppercase;
     }
     nav a:link {color:#4E4E4E;}
     nav a:visited {color:#4E4E4E;}
-    nav a:hover {color:#000; text-decoration: none; font-weight:bold;}
-    nav a:active {color:#000; font-weight:bold;}
-    nav a.active-link {color:#000; font-weight:bold;}
-    nav a.active-gallery {color:#000; font-weight:bold;}
-    nav a.active-gallery-image {color:#000; font-weight:bold;}
+    nav a:hover {color:#000; text-decoration: none; font-family: 'chronoBold', 'Lucida Grande', Tahoma, Verdana, Sans-Serif;}
+    nav a:active {color:#000; font-family: 'chronoBold', 'Lucida Grande', Tahoma, Verdana, Sans-Serif;}
+    nav a.active-link {color:#000; font-family: 'chronoBold', 'Lucida Grande', Tahoma, Verdana, Sans-Serif;}
+    nav a.active-gallery {color:#000; font-family: 'chronoBold', 'Lucida Grande', Tahoma, Verdana, Sans-Serif;}
+    nav a.active-gallery-image {color:#000; font-family: 'chronoBold', 'Lucida Grande', Tahoma, Verdana, Sans-Serif;}
     
 
 /* content */
@@ -171,16 +189,16 @@ nav {
 #content {
     display:none;
     position:absolute;
-    bottom:-274px;
+    bottom:-297px;
     left:-1px;
     background: url("{% THEME %}/img/content-background.png");
-    height: 234px;
+    height: 273px;
     width:265px; 
     padding:10px;
     z-index:9;
     font-size:12px;
     font-family: 'chronoRegular', 'Lucida Grande', Tahoma, Verdana, Sans-Serif;
-    line-height: 14px;
+    line-height: 13px;
     }
     #content h1 {
         margin:50px 0 30px 0;
@@ -189,8 +207,12 @@ nav {
     }
     #content .ajax-content {
         overflow-y:auto;
-        max-height: 225px;
+        max-height: 282px;
         padding-left: 12px;
+        br {
+           display: block;
+           margin: 10px 0;
+        }
     }
 
 /* footer */
@@ -263,9 +285,9 @@ span.inactive {
     z-index:100;
     }
     .slideshow-loading div {
-        width:36px;
-        height:35px;
-        line-height:30px;
+        width: 24px;
+        height: 25px;
+        line-height: 20px;
         background:#fff;
         margin:0 auto;
         -webkit-box-shadow: 4px 4px 10px rgba(50, 50, 50, 0.65);
@@ -300,15 +322,15 @@ span.inactive {
     #slideshow .arrow.previous {
         position:absolute;
         top:450px;
-        left:10px;
+        left:40px;
     }
     #slideshow .arrow.next {
         position:absolute;
         top:450px;
-        right:10px;
+        right:40px;
     }
     #slideshow .arrow img {
-        width:24px;
+        width:14px;
     }
     #image-info-background {
         display:none;
@@ -332,5 +354,5 @@ span.inactive {
         line-height: 27px;
         font-size: 12px;
         overflow: hidden;
-        padding: 0 31px 0 33px;
+        padding: 0 31px 0 41px;
     }
