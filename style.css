@@ -67,7 +67,8 @@ header, nav, section, article, hgroup, footer, address { display:block; }
     clear:both;
 }
 #menuToggle {
-    margin:5px 11px 0 0;
+    float:left;
+    margin:5px 13px 0 88px;
 }
 #contentToggle {
     margin:-1px -1px 0 0;
